@@ -1,0 +1,27 @@
+.pomodoro .container {
+    width: 300px;
+}
+
+.pomodoro .countdownTimer {
+    width: 100%;
+    display: grid;
+    place-items: center;
+    height: 100px;
+    border: 1px solid black;
+    border-radius: 16px;
+    background-color: white;
+}
+
+.pomodoro .countdownTimer h2 {
+    font-size: 32px;
+}
+
+.pomodoro .timerControls {
+    padding: var(--default-spacing) 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.pomodoro .timerActions .btn {
+    width: 100%;
+}
