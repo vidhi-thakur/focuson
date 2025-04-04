@@ -66,7 +66,7 @@ const PomodoroTimer: React.FC = () => {
 
     return () => clearInterval(id);
 
-  }, [currTime.sec, currTime.min, isTimerOn])
+  }, [isTimerOn])
 
   const startTimer = (): void => setIsTimerOn(true);
   const stopTimer = (): void => setIsTimerOn(false);
