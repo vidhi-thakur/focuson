@@ -13,4 +13,5 @@
   text-align: center;
   padding: var(--default-spacing);
   background: var(--default-background-color);
+  width: 300px;
 }
