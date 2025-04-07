@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import "./PomodoroTimer.css";
 
@@ -32,7 +32,7 @@ const OPTIONS: Option[] = [
   },
 ];
 
-const PomodoroTimer: React.FC = () => {
+const PomodoroTimer: FC = () => {
   const [currActionIndex, setCurrActionIndex] = useState<number>(0);
   const [isTimerOn, setIsTimerOn] = useState<boolean>(false);
   const [currTime, setCurrTime] = useState<Time>({

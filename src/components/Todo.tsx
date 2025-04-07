@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { FC, useState } from "react";
 import SettingsIcon from "@mui/icons-material/Settings";
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 import "./Todo.css";
-import { Button, Paper, Typography } from "@mui/material";
+import { Button } from "@mui/material";
 import CheckboxList from "./CheckboxList";
 
 interface Task {
@@ -10,7 +10,7 @@ interface Task {
     name: string;
 }
 
-const Todo: React.FC = () => {
+const Todo: FC = () => {
     const [list, setList] = useState<Task[]>([]);
 
     return (

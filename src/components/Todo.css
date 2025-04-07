@@ -18,3 +18,19 @@
     margin-bottom: var(--default-spacing);
     text-transform: none;
 }
+
+.todo .nextIcon {
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+}
+
+.todo .nextIcon:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+.todo .nextIcon path {
+    fill: rgba(0, 0, 0, 0.6);
+}
