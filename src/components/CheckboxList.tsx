@@ -1,4 +1,4 @@
-import * as React from "react";
+import { FC, useState } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -8,8 +8,8 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import NavigateNextTwoToneIcon from "@mui/icons-material/NavigateNextTwoTone";
 
-const CheckboxList: React.FC = () => {
-  const [checked, setChecked] = React.useState([0]);
+const CheckboxList: FC = () => {
+  const [checked, setChecked] = useState([0]);
 
   const handleToggle = (value: number) => () => {
     const currentIndex = checked.indexOf(value);
@@ -32,18 +32,25 @@ const CheckboxList: React.FC = () => {
         return (
           <ListItem
             key={value}
+            sx={{
+              opacity: checked.includes(value) ? 0.4 : 1
+            }}
             secondaryAction={
-              <IconButton edge="end" aria-label="select task to focus">
-                <NavigateNextTwoToneIcon />
-              </IconButton>
+              <span title="select task to focus" className="nextIcon">
+                <NavigateNextTwoToneIcon color="inherit" />
+              </span>
             }
             disablePadding
           >
             <ListItemButton
               role={undefined}
-              onClick={handleToggle(value)}
               dense
-              sx={{ opacity: checked.includes(value) ? 0.4 : 1 }}
+              disableRipple
+              sx={{
+                '&:hover': {
+                  backgroundColor: 'transparent',
+                }
+              }}
             >
               <ListItemIcon>
                 <Checkbox
@@ -51,7 +58,7 @@ const CheckboxList: React.FC = () => {
                   checked={checked.includes(value)}
                   tabIndex={-1}
                   disableRipple
-                  inputProps={{ "aria-labelledby": labelId }}
+                  onClick={handleToggle(value)}
                 />
               </ListItemIcon>
               <ListItemText
