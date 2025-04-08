@@ -32,3 +32,19 @@
   margin: var(--default-spacing-sm) 0px;
   fill: var(--icon-color) !important;
 }
+
+.customIconBox {
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+
+.customIconBox:hover {
+  background-color: var(--icon-hover-color);
+}
+
+.customIconBox path {
+  fill: var(--icon-color);
+}

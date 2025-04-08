@@ -19,7 +19,3 @@
 .pomodoro .timerControls {
     padding: var(--default-spacing) 0px var(--default-spacing-sm);
 }
-
-.pomodoro .timerActions .btn {
-    text-transform: none;
-}
