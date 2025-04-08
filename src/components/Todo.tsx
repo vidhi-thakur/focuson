@@ -3,15 +3,34 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 import "./Todo.css";
 import { Button } from "@mui/material";
-import CheckboxList from "./CheckboxList";
+import NavigateNextTwoToneIcon from "@mui/icons-material/NavigateNextTwoTone";
+
 
 interface Task {
-    isCompleted: boolean;
-    name: string;
+    isCompleted: boolean,
+    name: string,
+    id: number
 }
 
 const Todo: FC = () => {
     const [list, setList] = useState<Task[]>([]);
+    const [isCardOpen, setIsCardOpen] = useState<boolean>(false);
+
+    const handleCardOpen = (): void => {
+        setIsCardOpen(true);
+    }
+
+    const handleCardClose = (): void => {
+        setIsCardOpen(false);
+    }
+    const handleCardSubmit = (): void => {
+        setList(l => [...l, {
+            id: l.length,
+            name: "dummy",
+            isCompleted: false
+        }]);
+        // setIsCardOpen(false);
+    }
 
     return (
         <div className="todo">
@@ -30,12 +49,28 @@ const Todo: FC = () => {
                 startIcon={<AddCircleOutlineRoundedIcon />}
                 fullWidth
                 className="addTaskBtn"
+                onClick={handleCardSubmit}
             >
                 Add task
             </Button>
 
+
             {/* display list */}
-            <CheckboxList />
+            <section>
+                <ul>
+                    {list.map(({ name, id, isCompleted }) => {
+                        return <li>
+                            {/* a div to display content, add ellipsis  */}
+                            <p>{name}</p>
+
+                            {/* next icon to select task */}
+                            <span title="click to continue" className="nextIcon">
+                                <NavigateNextTwoToneIcon color="inherit" />
+                            </span>
+                        </li>
+                    })}
+                </ul>
+            </section>
         </div>
     );
 };
