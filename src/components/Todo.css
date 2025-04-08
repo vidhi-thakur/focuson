@@ -13,10 +13,24 @@
     cursor: pointer;
 }
 
-.todo .addTaskBtn {
+.todo .addTask {
     margin-top: var(--default-spacing-lg);
     margin-bottom: var(--default-spacing);
+    text-align: left;
+}
+
+.todo .addTask .backIcon {
+    cursor: pointer;
+    margin: var(--default-spacing-sm) 0px;
+    fill: var(--icon-color);
+}
+
+.todo .addTask .btn {
     text-transform: none;
+}
+
+.todo .addTask .btn2 {
+    margin-top: var(--default-spacing);
 }
 
 .todo .nextIcon {
@@ -28,9 +42,29 @@
 }
 
 .todo .nextIcon:hover {
-    background-color: rgba(0, 0, 0, 0.04);
+    background-color: var(--icon-hover-color);
 }
 
 .todo .nextIcon path {
-    fill: rgba(0, 0, 0, 0.6);
+    fill: var(--icon-color);
+}
+
+.todo .todoList ul {
+    padding: 0;
+}
+
+.todo .todoList li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: default;
+}
+
+.todo .todoList li p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: default;
+    width: calc(100% - 40px);
+    text-align: left;
 }

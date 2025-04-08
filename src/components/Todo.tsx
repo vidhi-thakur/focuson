@@ -1,36 +1,41 @@
 import { FC, useState } from "react";
 import SettingsIcon from "@mui/icons-material/Settings";
-import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
+import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 import "./Todo.css";
-import { Button } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import NavigateNextTwoToneIcon from "@mui/icons-material/NavigateNextTwoTone";
-
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 
 interface Task {
-    isCompleted: boolean,
-    name: string,
-    id: number
+    isCompleted: boolean;
+    name: string;
+    id: number;
 }
 
 const Todo: FC = () => {
     const [list, setList] = useState<Task[]>([]);
-    const [isCardOpen, setIsCardOpen] = useState<boolean>(false);
+    const [addMode, setAddMode] = useState<boolean>(false);
+    const [input, setInput] = useState<string>("");
 
-    const handleCardOpen = (): void => {
-        setIsCardOpen(true);
-    }
+    const addModeOpen = (): void => {
+        setAddMode(true);
+    };
 
-    const handleCardClose = (): void => {
-        setIsCardOpen(false);
-    }
+    const addModeClose = (): void => {
+        setInput("");
+        setAddMode(false);
+    };
     const handleCardSubmit = (): void => {
-        setList(l => [...l, {
-            id: l.length,
-            name: "dummy",
-            isCompleted: false
-        }]);
-        // setIsCardOpen(false);
-    }
+        setList((l) => [
+            ...l,
+            {
+                id: l.length,
+                name: input,
+                isCompleted: false,
+            },
+        ]);
+        addModeClose();
+    };
 
     return (
         <div className="todo">
@@ -42,32 +47,66 @@ const Todo: FC = () => {
                 </span>
             </header>
 
-            {/* Add task */}
-            <Button
-                variant="outlined"
-                size="small"
-                startIcon={<AddCircleOutlineRoundedIcon />}
-                fullWidth
-                className="addTaskBtn"
-                onClick={handleCardSubmit}
-            >
-                Add task
-            </Button>
-
+            {/* add new task */}
+            <section className="addTask">
+                {!addMode ? (
+                    <Button
+                        variant="outlined"
+                        size="small"
+                        startIcon={<AddCircleOutlineRoundedIcon />}
+                        fullWidth
+                        className="btn"
+                        onClick={addModeOpen}
+                    >
+                        Create new task
+                    </Button>
+                ) : (
+                    <section>
+                        <ArrowBackRoundedIcon fontSize="small" className="backIcon" onClick={addModeClose} />
+                        <TextField
+                            fullWidth
+                            label="Write your task"
+                            variant="outlined"
+                            multiline
+                            rows={2}
+                            size="small"
+                            onChange={(e) => setInput(e.target.value)}
+                        />
+                        <Button
+                            variant="contained"
+                            size="small"
+                            fullWidth
+                            onClick={handleCardSubmit}
+                            className="btn btn2"
+                        >
+                            Add
+                        </Button>
+                    </section>
+                )}
+            </section>
 
             {/* display list */}
-            <section>
+            <section className="todoList">
                 <ul>
                     {list.map(({ name, id, isCompleted }) => {
-                        return <li>
-                            {/* a div to display content, add ellipsis  */}
-                            <p>{name}</p>
+                        return (
+                            <li
+                                key={id}
+                                style={
+                                    isCompleted
+                                        ? { textDecoration: "line-through", opacity: 0.5 }
+                                        : {}
+                                }
+                            >
+                                {/* a div to display content, add ellipsis  */}
+                                <p>{name}</p>
 
-                            {/* next icon to select task */}
-                            <span title="click to continue" className="nextIcon">
-                                <NavigateNextTwoToneIcon color="inherit" />
-                            </span>
-                        </li>
+                                {/* next icon to select task */}
+                                <span title="click to start" className="nextIcon">
+                                    <NavigateNextTwoToneIcon color="inherit" />
+                                </span>
+                            </li>
+                        );
                     })}
                 </ul>
             </section>
