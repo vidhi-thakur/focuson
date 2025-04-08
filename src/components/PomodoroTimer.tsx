@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, ButtonGroup } from "@mui/material";
 import { FC, useEffect, useState } from "react";
 import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import "./PomodoroTimer.css";
@@ -85,21 +85,29 @@ const PomodoroTimer: FC = () => {
         </section>
 
         {/* start/stop timer CTA */}
-        <section className="timerControls">
-          <Button disabled={isTimerOn} onClick={startTimer} variant="contained">
+        <ButtonGroup
+          className="timerControls"
+          disableElevation
+          variant="contained"
+          fullWidth
+        >
+          <Button disabled={isTimerOn} onClick={startTimer}>
             Start
           </Button>
-          <Button disabled={!isTimerOn} onClick={stopTimer} variant="contained">
+          <Button disabled={!isTimerOn} onClick={stopTimer}>
             Stop
           </Button>
-        </section>
+        </ButtonGroup>
 
         {/* click and change options */}
         <section className="timerActions">
           <Button
             className="btn"
+            fullWidth
             startIcon={<UnfoldMoreIcon />}
             onClick={changeAction}
+            variant="contained"
+            disableElevation
           >
             {OPTIONS[currActionIndex].name}
           </Button>

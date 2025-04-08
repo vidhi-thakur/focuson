@@ -17,11 +17,9 @@
 }
 
 .pomodoro .timerControls {
-    padding: var(--default-spacing) 0;
-    display: flex;
-    justify-content: space-between;
+    padding: var(--default-spacing) 0px var(--default-spacing-sm);
 }
 
 .pomodoro .timerActions .btn {
-    width: 100%;
+    text-transform: none;
 }
