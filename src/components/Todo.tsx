@@ -1,6 +1,6 @@
 import { FC, lazy, Suspense, useState } from "react";
 import SettingsIcon from "@mui/icons-material/Settings";
-import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
+import AddTaskRoundedIcon from '@mui/icons-material/AddTaskRounded';
 import "./Todo.css";
 import { Button, LinearProgress } from "@mui/material";
 const FocusTask = lazy(() => import('./FocusTask'));
@@ -14,7 +14,11 @@ interface Task {
     id: number;
 }
 
-const Todo: FC = () => {
+interface TodoProps {
+    redirectToSetting: () => void
+}
+
+const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
     const [list, setList] = useState<Task[]>([]);
     const [addMode, setAddMode] = useState<boolean>(false);
     const [input, setInput] = useState<string>("");
@@ -32,15 +36,17 @@ const Todo: FC = () => {
         setAddMode(false);
     };
     const handleCardSubmit = (): void => {
-        setList((l) => [
-            ...l,
-            {
-                id: l.length,
-                name: input,
-                isCompleted: false,
-            },
-        ]);
-        addModeClose();
+        if (input.trim() !== "") {
+            setList((l) => [
+                ...l,
+                {
+                    id: l.length,
+                    name: input,
+                    isCompleted: false,
+                },
+            ]);
+            addModeClose();
+        }
     };
 
     // focus-task functions
@@ -86,8 +92,8 @@ const Todo: FC = () => {
             {/* header */}
             <header>
                 <h2>My tasks</h2>
-                <span title="Block distracting sites while working.">
-                    <SettingsIcon className="icon" color="primary" />
+                <span title="Block sites">
+                    <SettingsIcon onClick={redirectToSetting} className="icon" color="primary" />
                 </span>
             </header>
 
@@ -95,9 +101,9 @@ const Todo: FC = () => {
             <section className="addTask">
                 {!addMode ? (
                     <Button
-                        variant="outlined"
+                        variant="contained"
                         size="small"
-                        startIcon={<AddCircleOutlineRoundedIcon />}
+                        startIcon={<AddTaskRoundedIcon />}
                         fullWidth
                         className="btn"
                         onClick={addModeOpen}
@@ -146,7 +152,7 @@ const Todo: FC = () => {
                                 <p>{name}</p>
 
                                 {/* next icon to select task */}
-                                <span title="click to start" className="nextIcon" onClick={() => handleNext({ name, id, isCompleted })}>
+                                <span title="click to start" className="customIconBox" onClick={() => handleNext({ name, id, isCompleted })}>
                                     <NavigateNextTwoToneIcon color="inherit" />
                                 </span>
                             </li>

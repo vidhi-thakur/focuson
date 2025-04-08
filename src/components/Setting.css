@@ -1,0 +1,32 @@
+.setting header {
+    text-align: left;
+}
+
+.setting .urlList {
+    margin: var(--default-spacing-lg) 0px;
+}
+
+.setting .urlList ul {
+    padding: 0;
+}
+
+.setting .urlList li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: default;
+}
+
+.setting .urlList li p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: default;
+    width: calc(100% - 40px);
+    text-align: left;
+}
+
+.setting .form {
+    display: flex;
+    gap: var(--default-spacing-sm);
+}

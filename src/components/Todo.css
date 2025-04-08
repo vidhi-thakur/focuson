@@ -19,28 +19,8 @@
     text-align: left;
 }
 
-.todo .addTask .btn {
-    text-transform: none;
-}
-
 .todo .addTask .btn2 {
     margin-top: var(--default-spacing);
-}
-
-.todo .nextIcon {
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-}
-
-.todo .nextIcon:hover {
-    background-color: var(--icon-hover-color);
-}
-
-.todo .nextIcon path {
-    fill: var(--icon-color);
 }
 
 .todo .todoList ul {
