@@ -1,15 +1,10 @@
-// components
-import Todo from './components/Todo';
-
-// css
-import './App.css';
-import FocusTask from './components/FocusTask';
+import Todo from "./components/Todo";
+import "./App.css";
 
 function App() {
   return (
     <div className="App">
-      {/* <Todo /> */}
-      <FocusTask />
+      <Todo />
     </div>
   );
 }

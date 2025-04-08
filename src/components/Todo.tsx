@@ -1,10 +1,12 @@
-import { FC, useState } from "react";
+import { FC, lazy, Suspense, useState } from "react";
 import SettingsIcon from "@mui/icons-material/Settings";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 import "./Todo.css";
-import { Button, TextField } from "@mui/material";
-import NavigateNextTwoToneIcon from "@mui/icons-material/NavigateNextTwoTone";
-import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+import { Button, LinearProgress } from "@mui/material";
+const FocusTask = lazy(() => import('./FocusTask'));
+const TextField = lazy(() => import('@mui/material/TextField'));
+const ArrowBackRoundedIcon = lazy(() => import('@mui/icons-material/ArrowBackRounded'));
+const NavigateNextTwoToneIcon = lazy(() => import('@mui/icons-material/NavigateNextTwoTone'));
 
 interface Task {
     isCompleted: boolean;
@@ -16,7 +18,11 @@ const Todo: FC = () => {
     const [list, setList] = useState<Task[]>([]);
     const [addMode, setAddMode] = useState<boolean>(false);
     const [input, setInput] = useState<string>("");
+    const [isFocusOn, setIsFocusOn] = useState<boolean>(false);
+    const [focusTask, setFocusTask] = useState<Task | null>(null);
 
+
+    // to-do functions
     const addModeOpen = (): void => {
         setAddMode(true);
     };
@@ -36,6 +42,44 @@ const Todo: FC = () => {
         ]);
         addModeClose();
     };
+
+    // focus-task functions
+    const handleNext = (task: Task): void => {
+        setFocusTask(task);
+        setIsFocusOn(true);
+    }
+
+    const handleBack = (): void => {
+        setIsFocusOn(false);
+    }
+
+    const handleDelete = (id: number): void => {
+        setIsFocusOn(false);
+        setList(l => l.filter(val => id !== val.id));
+
+    }
+
+    const handleComplete = (id: number): void => {
+        setIsFocusOn(false);
+        setList(l => l.map(val => {
+            if (id !== val.id) return val;
+            return {
+                ...val,
+                isCompleted: true
+            }
+        }));
+    }
+
+    if (isFocusOn) {
+        return <Suspense fallback={<LinearProgress />}>
+            <FocusTask
+                handleDelete={handleDelete}
+                handleComplete={handleComplete}
+                handleBack={handleBack}
+                {...focusTask}
+            />
+        </Suspense>
+    }
 
     return (
         <div className="todo">
@@ -62,7 +106,7 @@ const Todo: FC = () => {
                     </Button>
                 ) : (
                     <section>
-                        <ArrowBackRoundedIcon fontSize="small" className="backIcon" onClick={addModeClose} />
+                        <ArrowBackRoundedIcon fontSize="small" className="customIcon" onClick={addModeClose} />
                         <TextField
                             fullWidth
                             label="Write your task"
@@ -102,7 +146,7 @@ const Todo: FC = () => {
                                 <p>{name}</p>
 
                                 {/* next icon to select task */}
-                                <span title="click to start" className="nextIcon">
+                                <span title="click to start" className="nextIcon" onClick={() => handleNext({ name, id, isCompleted })}>
                                     <NavigateNextTwoToneIcon color="inherit" />
                                 </span>
                             </li>
