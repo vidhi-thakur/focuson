@@ -19,12 +19,6 @@
     text-align: left;
 }
 
-.todo .addTask .backIcon {
-    cursor: pointer;
-    margin: var(--default-spacing-sm) 0px;
-    fill: var(--icon-color);
-}
-
 .todo .addTask .btn {
     text-transform: none;
 }

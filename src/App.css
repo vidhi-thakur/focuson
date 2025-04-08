@@ -23,4 +23,12 @@
   text-align: center;
   padding: var(--default-spacing);
   background-color: transparent;
+  position: relative;
+}
+
+/* COMMON CSS - CSS for icons for consistency in design */
+.customIcon {
+  cursor: pointer;
+  margin: var(--default-spacing-sm) 0px;
+  fill: var(--icon-color) !important;
 }

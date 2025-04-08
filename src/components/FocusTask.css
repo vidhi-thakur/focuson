@@ -1,0 +1,14 @@
+.focusTask .completeBtn {
+    margin-top: var(--default-spacing-lg);
+}
+
+.focusTask header nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.focusTask header h2 {
+    text-align: left;
+    margin-bottom: var(--default-spacing-lg);
+}
