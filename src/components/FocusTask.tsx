@@ -33,11 +33,16 @@ const FocusTask: FC<FocusTaskProps> = ({
                         id !== undefined && handleDelete(id);
                     }} />
                 </nav>
-                <h2>{name}</h2>
+                <div>
+                    <h2>{name}</h2>
+                    <small>Stay focused - you're one step closer to finishing this!</small>
+                </div>
             </header>
 
             {/* display pomodoro */}
-            <PomodoroTimer />
+            <section className="pomodoro">
+                <PomodoroTimer />
+            </section>
 
             {/* btn to mark task as complete */}
             <Button

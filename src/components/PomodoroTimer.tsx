@@ -108,6 +108,7 @@ const PomodoroTimer: FC = () => {
             onClick={changeAction}
             variant="contained"
             disableElevation
+            disabled={isTimerOn}
           >
             {OPTIONS[currActionIndex].name}
           </Button>

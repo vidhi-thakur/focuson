@@ -9,6 +9,9 @@
 }
 
 .focusTask header h2 {
-    text-align: left;
-    margin-bottom: var(--default-spacing-lg);
+    text-transform: capitalize;
+}
+
+.focusTask .pomodoro {
+    margin-top: var(--default-spacing-lg);
 }

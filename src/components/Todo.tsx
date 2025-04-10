@@ -1,5 +1,5 @@
-import { FC, lazy, Suspense, useState } from "react";
-import SettingsIcon from "@mui/icons-material/Settings";
+import { ChangeEvent, FC, lazy, Suspense, useState } from "react";
+// import SettingsIcon from "@mui/icons-material/Settings";
 import AddTaskRoundedIcon from '@mui/icons-material/AddTaskRounded';
 import "./Todo.css";
 import { Button, LinearProgress } from "@mui/material";
@@ -91,10 +91,13 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
         <div className="todo">
             {/* header */}
             <header>
-                <h2>My tasks</h2>
-                <span title="Block sites">
+                <div>
+                    <h2>To-Do List</h2>
+                    <small>Stay on top of your goals - add your tasks here</small>
+                </div>
+                {/* <span title="Block sites">
                     <SettingsIcon onClick={redirectToSetting} className="icon" color="primary" />
-                </span>
+                </span> */}
             </header>
 
             {/* add new task */}
@@ -120,7 +123,7 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
                             multiline
                             rows={2}
                             size="small"
-                            onChange={(e) => setInput(e.target.value)}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => setInput(e.target.value)}
                         />
                         <Button
                             variant="contained"

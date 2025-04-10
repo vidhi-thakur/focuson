@@ -23,6 +23,10 @@
     margin-top: var(--default-spacing);
 }
 
+.todo .addTask .css-szkf5z-MuiInputBase-root-MuiOutlinedInput-root {
+    background-color: white;
+}
+
 .todo .todoList ul {
     padding: 0;
 }
