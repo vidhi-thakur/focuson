@@ -19,6 +19,7 @@
   width: 300px;
   height: 450px;
   box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
 }
 
 .App {
@@ -26,6 +27,8 @@
   padding: var(--default-spacing);
   background-color: transparent;
   position: relative;
+  overflow-y: auto;
+  height: 100%;
 }
 
 /* COMMON CSS - CSS for icons for consistency in design */
@@ -51,10 +54,28 @@
   fill: var(--icon-color);
 }
 
+/* Custom CSS for html elements */
 h2 {
   font-size: 24px;
 }
 
 small {
   font-size: 13px;
+}
+
+/* CSS for scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.4);
 }
