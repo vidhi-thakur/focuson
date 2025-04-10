@@ -4,7 +4,12 @@
   "version": "1.0",
   "description": "Chrome extention to help you hyper focus on your work.",
   "action": {
-    "default_popup": "index.html"
+    "default_popup": "index.html",
+    "default_icon": {
+      "16": "assets/FocusOn16px.png",
+      "48": "assets/FocusOn48px.png",
+      "128": "assets/FocusOn128px.png"
+    }
   },
   "permissions": []
 }
