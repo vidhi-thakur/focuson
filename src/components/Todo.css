@@ -23,6 +23,10 @@
     margin-top: var(--default-spacing);
 }
 
+.todo .addTask .MuiInputBase-root {
+    background-color: white;
+}
+
 .todo .todoList ul {
     padding: 0;
 }

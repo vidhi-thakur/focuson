@@ -1,8 +1,9 @@
-import { FC, lazy, Suspense, useState } from "react";
-import SettingsIcon from "@mui/icons-material/Settings";
+import { ChangeEvent, FC, lazy, Suspense, useState } from "react";
+// import SettingsIcon from "@mui/icons-material/Settings";
 import AddTaskRoundedIcon from '@mui/icons-material/AddTaskRounded';
 import "./Todo.css";
 import { Button, LinearProgress } from "@mui/material";
+import { useLocalStorage } from "../customHooks/useLocalStorage";
 const FocusTask = lazy(() => import('./FocusTask'));
 const TextField = lazy(() => import('@mui/material/TextField'));
 const ArrowBackRoundedIcon = lazy(() => import('@mui/icons-material/ArrowBackRounded'));
@@ -19,11 +20,12 @@ interface TodoProps {
 }
 
 const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
-    const [list, setList] = useState<Task[]>([]);
     const [addMode, setAddMode] = useState<boolean>(false);
     const [input, setInput] = useState<string>("");
     const [isFocusOn, setIsFocusOn] = useState<boolean>(false);
     const [focusTask, setFocusTask] = useState<Task | null>(null);
+
+    const [todoList, setTodoList] = useLocalStorage<Task[]>("todos", []);
 
 
     // to-do functions
@@ -37,10 +39,10 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
     };
     const handleCardSubmit = (): void => {
         if (input.trim() !== "") {
-            setList((l) => [
-                ...l,
+            setTodoList([
+                ...todoList,
                 {
-                    id: l.length,
+                    id: todoList.length,
                     name: input,
                     isCompleted: false,
                 },
@@ -61,13 +63,13 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
 
     const handleDelete = (id: number): void => {
         setIsFocusOn(false);
-        setList(l => l.filter(val => id !== val.id));
+        setTodoList(todoList.filter(val => id !== val.id));
 
     }
 
     const handleComplete = (id: number): void => {
         setIsFocusOn(false);
-        setList(l => l.map(val => {
+        setTodoList(todoList.map(val => {
             if (id !== val.id) return val;
             return {
                 ...val,
@@ -91,10 +93,13 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
         <div className="todo">
             {/* header */}
             <header>
-                <h2>My tasks</h2>
-                <span title="Block sites">
+                <div>
+                    <h2>To-Do List</h2>
+                    <small>Stay on top of your goals - add your tasks here</small>
+                </div>
+                {/* <span title="Block sites">
                     <SettingsIcon onClick={redirectToSetting} className="icon" color="primary" />
-                </span>
+                </span> */}
             </header>
 
             {/* add new task */}
@@ -120,7 +125,7 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
                             multiline
                             rows={2}
                             size="small"
-                            onChange={(e) => setInput(e.target.value)}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => setInput(e.target.value)}
                         />
                         <Button
                             variant="contained"
@@ -135,10 +140,10 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
                 )}
             </section>
 
-            {/* display list */}
+            {/* display todolist */}
             <section className="todoList">
                 <ul>
-                    {list.map(({ name, id, isCompleted }) => {
+                    {todoList.map(({ name, id, isCompleted }) => {
                         return (
                             <li
                                 key={id}
@@ -152,7 +157,7 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
                                 <p>{name}</p>
 
                                 {/* next icon to select task */}
-                                <span title="click to start" className="customIconBox" onClick={() => handleNext({ name, id, isCompleted })}>
+                                <span title="Begin focus mode" className="customIconBox" onClick={() => handleNext({ name, id, isCompleted })}>
                                     <NavigateNextTwoToneIcon color="inherit" />
                                 </span>
                             </li>
