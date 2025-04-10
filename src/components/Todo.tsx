@@ -157,7 +157,7 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
                                 <p>{name}</p>
 
                                 {/* next icon to select task */}
-                                <span title="click to start" className="customIconBox" onClick={() => handleNext({ name, id, isCompleted })}>
+                                <span title="Begin focus mode" className="customIconBox" onClick={() => handleNext({ name, id, isCompleted })}>
                                     <NavigateNextTwoToneIcon color="inherit" />
                                 </span>
                             </li>
