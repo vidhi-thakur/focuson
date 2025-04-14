@@ -2,10 +2,13 @@
     margin-top: var(--default-spacing-lg);
 }
 
-.focusTask header nav {
+.focusTask header nav,
+.focusTask header .content {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--default-spacing-);
 }
 
 .focusTask header h2 {
