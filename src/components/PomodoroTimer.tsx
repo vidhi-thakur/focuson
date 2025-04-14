@@ -1,7 +1,8 @@
 import { Button, ButtonGroup } from "@mui/material";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
 import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import "./PomodoroTimer.css";
+import { useLocalStorage } from "../customHooks/useLocalStorage";
 
 interface Option {
   id: number;
@@ -33,9 +34,9 @@ const OPTIONS: Option[] = [
 ];
 
 const PomodoroTimer: FC = () => {
-  const [currActionIndex, setCurrActionIndex] = useState<number>(0);
-  const [isTimerOn, setIsTimerOn] = useState<boolean>(false);
-  const [currTime, setCurrTime] = useState<Time>({
+  const [currActionIndex, setCurrActionIndex] = useLocalStorage<number>("currActionIndex", 0);
+  const [isTimerOn, setIsTimerOn] = useLocalStorage<boolean>("isTimerOn", false);
+  const [currTime, setCurrTime] = useLocalStorage<Time>("currTime", {
     min: OPTIONS[currActionIndex].duration,
     sec: 0,
   });
@@ -62,6 +63,7 @@ const PomodoroTimer: FC = () => {
     }
 
     return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isTimerOn]);
 
   const startTimer = (): void => setIsTimerOn(true);

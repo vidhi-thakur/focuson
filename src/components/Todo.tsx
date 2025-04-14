@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, lazy, Suspense, useState } from "react";
+import { ChangeEvent, FC, lazy, Suspense } from "react";
 // import SettingsIcon from "@mui/icons-material/Settings";
 import AddTaskRoundedIcon from '@mui/icons-material/AddTaskRounded';
 import "./Todo.css";
@@ -20,10 +20,10 @@ interface TodoProps {
 }
 
 const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
-    const [addMode, setAddMode] = useState<boolean>(false);
-    const [input, setInput] = useState<string>("");
-    const [isFocusOn, setIsFocusOn] = useState<boolean>(false);
-    const [focusTask, setFocusTask] = useState<Task | null>(null);
+    const [addMode, setAddMode] = useLocalStorage<boolean>("addMode", false);
+    const [input, setInput] = useLocalStorage<string>("input", "");
+    const [isFocusOn, setIsFocusOn] = useLocalStorage<boolean>("isFocusOn", false);
+    const [focusTask, setFocusTask] = useLocalStorage<Task | null>("focusTask", null);
 
     const [todoList, setTodoList] = useLocalStorage<Task[]>("todos", []);
 
