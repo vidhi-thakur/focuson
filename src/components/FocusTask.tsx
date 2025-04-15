@@ -71,14 +71,12 @@ const FocusTask: FC<FocusTaskProps> = ({
 
             {/* display pomodoro */}
             <section className={isCollapsed ? '' : "pomodoro"}>
-                {isCollapsed && <div className="collapseIconBg">
-                    <span className="customIconBox">
-                        <OpenInFullRoundedIcon
-                            fontSize="small"
-                            onClick={() => setIsCollapsed(false)}
-                        />
-                    </span>
-                </div>}
+                {isCollapsed && <OpenInFullRoundedIcon
+                    fontSize="small"
+                    className="customIcon"
+                    onClick={() => setIsCollapsed(false)}
+                    sx={{ position: "absolute", top: 10, right: 10 }}
+                />}
                 <PomodoroTimer isCollapsed={isCollapsed} taskId={id} />
             </section>
 

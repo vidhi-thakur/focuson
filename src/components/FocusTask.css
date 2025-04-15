@@ -18,29 +18,3 @@
 .focusTask .pomodoro {
     margin-top: var(--default-spacing-lg);
 }
-
-.focusTask .collapseIconBg {
-    height: calc(100% - 32px);
-    width: calc(100% - 32px);
-    position: absolute;
-    display: grid;
-    place-items: center;
-}
-
-.focusTask .collapseIconBg path {
-    color: black;
-}
-
-.focusTask .collapseIconBg {
-    opacity: 0;
-}
-
-.focusTask .collapseIconBg:hover {
-    opacity: 1;
-    backdrop-filter: blur(4px);
-}
-
-.focusTask .collapseIconBg .customIconBox {
-    background: var(--default-background-color);
-    opacity: 0.85;
-}
