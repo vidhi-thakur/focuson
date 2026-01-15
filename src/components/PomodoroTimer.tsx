@@ -3,6 +3,7 @@ import { FC, useEffect } from "react";
 import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import "./PomodoroTimer.css";
 import { useLocalStorage } from "../customHooks/useLocalStorage";
+import { clearBadge, updateBadge } from "../helpers/badgeControl";
 
 interface Option {
   id: number;
@@ -41,6 +42,15 @@ const PomodoroTimer: FC = () => {
     sec: 0,
   });
 
+  // Update badge whenever timer state or time changes (including on mount)
+  useEffect(() => {
+    if (isTimerOn) {
+      updateBadge(currTime.min, currTime.sec, true);
+    } else {
+      clearBadge();
+    }
+  }, [isTimerOn, currTime.min, currTime.sec]);
+
   useEffect(() => {
     let id: NodeJS.Timer | number | undefined;
     if (isTimerOn) {
@@ -52,6 +62,7 @@ const PomodoroTimer: FC = () => {
           if (val.min === 0 && val.sec === 0) {
             clearInterval(id);
             setIsTimerOn(false);
+            clearBadge();
             return val;
           } else {
             return { ...val, sec: val.sec - 1 };
@@ -66,13 +77,24 @@ const PomodoroTimer: FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isTimerOn]);
 
-  const startTimer = (): void => setIsTimerOn(true);
-  const stopTimer = (): void => setIsTimerOn(false);
+  const startTimer = (): void => {
+    setIsTimerOn(true);
+    updateBadge(currTime.min, currTime.sec, true);
+  };
+  const stopTimer = (): void => {
+    setIsTimerOn(false);
+    clearBadge();
+  };
 
   const changeAction = (): void => {
     const index = (currActionIndex + 1) % OPTIONS.length;
     setCurrActionIndex(index);
-    setCurrTime({ min: OPTIONS[index].duration, sec: 0 });
+    const newTime = { min: OPTIONS[index].duration, sec: 0 };
+    setCurrTime(newTime);
+    // Update badge if timer is running
+    if (isTimerOn) {
+      updateBadge(newTime.min, newTime.sec, true);
+    }
   };
 
   return (

@@ -11,5 +11,8 @@
       "128": "assets/FocusOn128px.png"
     }
   },
+  "background": {
+    "service_worker": "background.js"
+  },
   "permissions": []
 }
