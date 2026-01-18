@@ -1,9 +1,11 @@
 import { Button, ButtonGroup } from "@mui/material";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import "./PomodoroTimer.css";
 import { useLocalStorage } from "../customHooks/useLocalStorage";
 import { clearBadge, updateBadge } from "../helpers/badgeControl";
+import { notifyTimerComplete } from "../helpers/notifications";
+import TimerCompleteModal from "./TimerCompleteModal";
 
 interface Option {
   id: number;
@@ -41,6 +43,35 @@ const PomodoroTimer: FC = () => {
     min: OPTIONS[currActionIndex].duration,
     sec: 0,
   });
+  const [showCompleteModal, setShowCompleteModal] = useState<boolean>(false);
+  
+  // Use ref to track current action index for use in timer callback
+  const currActionIndexRef = useRef(currActionIndex);
+  useEffect(() => {
+    currActionIndexRef.current = currActionIndex;
+  }, [currActionIndex]);
+
+  // Listen for timer completion messages from background script
+  useEffect(() => {
+    if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.onMessage) {
+      const messageListener = (message: any) => {
+        if (message.type === 'TIMER_COMPLETE') {
+          setShowCompleteModal((prev) => {
+            if (!prev) {
+              const timerType = OPTIONS[currActionIndexRef.current].name;
+              notifyTimerComplete(timerType);
+              return true;
+            }
+            return prev;
+          });
+        }
+      };
+      
+      chrome.runtime.onMessage.addListener(messageListener);
+      // Note: Chrome extension message listeners persist for the extension context lifetime
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only add listener once on mount
 
   // Update badge whenever timer state or time changes (including on mount)
   useEffect(() => {
@@ -63,6 +94,10 @@ const PomodoroTimer: FC = () => {
             clearInterval(id);
             setIsTimerOn(false);
             clearBadge();
+            // Trigger notification when timer completes
+            const timerType = OPTIONS[currActionIndexRef.current].name;
+            notifyTimerComplete(timerType);
+            setShowCompleteModal(true);
             return val;
           } else {
             return { ...val, sec: val.sec - 1 };
@@ -98,47 +133,56 @@ const PomodoroTimer: FC = () => {
   };
 
   return (
-    <div className="pomodoro">
-      <div className="container">
-        {/* count down time */}
-        <section className="countdownTimer">
-          <h2>
-            {currTime.min > 9 ? currTime.min : `0${currTime.min}`}:
-            {currTime.sec > 9 ? currTime.sec : `0${currTime.sec}`}
-          </h2>
-        </section>
+    <>
+      <div className="pomodoro">
+        <div className="container">
+          {/* count down time */}
+          <section className="countdownTimer">
+            <h2>
+              {currTime.min > 9 ? currTime.min : `0${currTime.min}`}:
+              {currTime.sec > 9 ? currTime.sec : `0${currTime.sec}`}
+            </h2>
+          </section>
 
-        {/* start/stop timer CTA */}
-        <ButtonGroup
-          className="timerControls"
-          disableElevation
-          variant="contained"
-          fullWidth
-        >
-          <Button disabled={isTimerOn} onClick={startTimer}>
-            Start
-          </Button>
-          <Button disabled={!isTimerOn} onClick={stopTimer}>
-            Stop
-          </Button>
-        </ButtonGroup>
-
-        {/* click and change options */}
-        <section className="timerActions">
-          <Button
-            className="btn"
-            fullWidth
-            startIcon={<UnfoldMoreIcon />}
-            onClick={changeAction}
-            variant="contained"
+          {/* start/stop timer CTA */}
+          <ButtonGroup
+            className="timerControls"
             disableElevation
-            disabled={isTimerOn}
+            variant="contained"
+            fullWidth
           >
-            {OPTIONS[currActionIndex].name}
-          </Button>
-        </section>
+            <Button disabled={isTimerOn} onClick={startTimer}>
+              Start
+            </Button>
+            <Button disabled={!isTimerOn} onClick={stopTimer}>
+              Stop
+            </Button>
+          </ButtonGroup>
+
+          {/* click and change options */}
+          <section className="timerActions">
+            <Button
+              className="btn"
+              fullWidth
+              startIcon={<UnfoldMoreIcon />}
+              onClick={changeAction}
+              variant="contained"
+              disableElevation
+              disabled={isTimerOn}
+            >
+              {OPTIONS[currActionIndex].name}
+            </Button>
+          </section>
+        </div>
       </div>
-    </div>
+      
+      {/* Timer Complete Modal */}
+      <TimerCompleteModal
+        open={showCompleteModal}
+        onClose={() => setShowCompleteModal(false)}
+        timerType={OPTIONS[currActionIndex].name}
+      />
+    </>
   );
 };
 
