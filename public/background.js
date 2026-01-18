@@ -44,13 +44,6 @@ function startTimer() {
       clearInterval(timerInterval);
       timerInterval = null;
       updateBadge(0, 0, false);
-      // Send message to popup to trigger notification (if popup is open)
-      chrome.runtime.sendMessage({
-        type: 'TIMER_COMPLETE',
-        timestamp: Date.now()
-      }).catch(() => {
-        // Popup might be closed, that's okay
-      });
     } else {
       timerState.sec -= 1;
     }
@@ -97,9 +90,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       sec: timerState.sec,
       isRunning: timerState.isRunning
     });
-  } else if (message.type === 'TIMER_COMPLETE') {
-    // Popup acknowledging timer completion
-    sendResponse({ success: true });
   }
   return true; // Keep the message channel open for async response
 });
