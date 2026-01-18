@@ -46,11 +46,11 @@ const PomodoroTimer: FC = () => {
   // Update badge whenever timer state or time changes (including on mount)
   useEffect(() => {
     if (isTimerOn) {
-      updateBadge(currTime.min, currTime.sec, true);
+      updateBadge(currTime.min, currTime.sec, true, currActionIndex);
     } else {
       clearBadge();
     }
-  }, [isTimerOn, currTime.min, currTime.sec]);
+  }, [isTimerOn, currTime.min, currTime.sec, currActionIndex]);
 
   useEffect(() => {
     let id: NodeJS.Timer | number | undefined;
@@ -82,7 +82,7 @@ const PomodoroTimer: FC = () => {
 
   const startTimer = (): void => {
     setIsTimerOn(true);
-    updateBadge(currTime.min, currTime.sec, true);
+    updateBadge(currTime.min, currTime.sec, true, currActionIndex);
   };
   const stopTimer = (): void => {
     setIsTimerOn(false);
@@ -96,7 +96,7 @@ const PomodoroTimer: FC = () => {
     setCurrTime(newTime);
     // Update badge if timer is running
     if (isTimerOn) {
-      updateBadge(newTime.min, newTime.sec, true);
+      updateBadge(newTime.min, newTime.sec, true, index);
     }
   };
 

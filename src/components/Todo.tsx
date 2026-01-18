@@ -1,5 +1,5 @@
 import { ChangeEvent, FC, lazy, Suspense } from "react";
-// import SettingsIcon from "@mui/icons-material/Settings";
+import SettingsIcon from "@mui/icons-material/Settings";
 import AddTaskRoundedIcon from "@mui/icons-material/AddTaskRounded";
 import "./Todo.css";
 import { Button, LinearProgress } from "@mui/material";
@@ -112,9 +112,9 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
           <h2>To-Do List</h2>
           <small>Stay on top of your goals - add your tasks here</small>
         </div>
-        {/* <span title="Block sites">
-                    <SettingsIcon onClick={redirectToSetting} className="icon" color="primary" />
-                </span> */}
+        <span title="Block sites">
+          <SettingsIcon onClick={redirectToSetting} className="icon" color="primary" />
+        </span>
       </header>
 
       {/* add new task */}

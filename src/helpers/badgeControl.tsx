@@ -1,5 +1,5 @@
 // Helper function to update badge on extension icon
-const updateBadge = (min: number, sec: number, isRunning: boolean): void => {
+const updateBadge = (min: number, sec: number, isRunning: boolean, actionIndex?: number): void => {
   if (
     typeof chrome !== "undefined" &&
     chrome.runtime &&
@@ -11,6 +11,7 @@ const updateBadge = (min: number, sec: number, isRunning: boolean): void => {
         min,
         sec,
         isRunning,
+        actionIndex: actionIndex !== undefined ? actionIndex : 0,
       })
       .catch(() => {
         console.error("Failed to update badge");
@@ -31,6 +32,24 @@ const clearBadge = (): void => {
       })
       .catch(() => {
         console.error("Failed to clear badge");
+      });
+  }
+};
+
+// Helper function to sync blocked URLs with background
+export const syncBlockedUrls = (urls: string[]): void => {
+  if (
+    typeof chrome !== "undefined" &&
+    chrome.runtime &&
+    chrome.runtime.sendMessage
+  ) {
+    chrome.runtime
+      .sendMessage({
+        type: "UPDATE_BLOCKED_URLS",
+        urls,
+      })
+      .catch(() => {
+        console.error("Failed to sync blocked URLs");
       });
   }
 };
