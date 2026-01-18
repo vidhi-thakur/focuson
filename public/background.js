@@ -8,6 +8,18 @@ function formatTime(min, sec) {
   return `${minutes}:${seconds}`;
 }
 
+// Show browser notification
+function showNotification(title, message) {
+  chrome.notifications.create({
+    type: 'basic',
+    iconUrl: chrome.runtime.getURL('assets/FocusOn48px.png'),
+    title: title,
+    message: message,
+    priority: 2, // High priority
+    requireInteraction: true
+  });
+}
+
 // Update badge with timer
 function updateBadge(min, sec, isRunning) {
   if (isRunning && (min > 0 || sec > 0)) {
@@ -44,6 +56,8 @@ function startTimer() {
       clearInterval(timerInterval);
       timerInterval = null;
       updateBadge(0, 0, false);
+      // Show notification when timer completes
+      showNotification("Timer Complete! ⏰", "Your timer is complete. Great job staying focused!");
     } else {
       timerState.sec -= 1;
     }
@@ -90,6 +104,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       sec: timerState.sec,
       isRunning: timerState.isRunning
     });
+  } else if (message.type === 'SHOW_NOTIFICATION') {
+    // Show notification from popup
+    showNotification(message.title, message.message);
+    sendResponse({ success: true });
   }
   return true; // Keep the message channel open for async response
 });

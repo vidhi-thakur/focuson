@@ -3,6 +3,11 @@
 
 interface Chrome {
   runtime?: {
+    getURL: boolean | {
+        sendMessage: (message: any, callback?: (response: any) => void) => Promise<any>; onMessage?: {
+            addListener: (callback: (message: any, sender: any, sendResponse: (response?: any) => void) => void) => void;
+        };
+    } | undefined;
     sendMessage: (message: any, callback?: (response: any) => void) => Promise<any>;
     onMessage?: {
       addListener: (callback: (message: any, sender: any, sendResponse: (response?: any) => void) => void) => void;

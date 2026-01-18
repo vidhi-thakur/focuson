@@ -4,6 +4,7 @@ import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import "./PomodoroTimer.css";
 import { useLocalStorage } from "../customHooks/useLocalStorage";
 import { clearBadge, updateBadge } from "../helpers/badgeControl";
+import { notifyTimerComplete } from "../helpers/notificationHelper";
 
 interface Option {
   id: number;
@@ -63,6 +64,8 @@ const PomodoroTimer: FC = () => {
             clearInterval(id);
             setIsTimerOn(false);
             clearBadge();
+            // Trigger notification when timer completes
+            notifyTimerComplete(OPTIONS[currActionIndex].name);
             return val;
           } else {
             return { ...val, sec: val.sec - 1 };
