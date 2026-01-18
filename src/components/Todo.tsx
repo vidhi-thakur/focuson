@@ -39,15 +39,15 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
   const [todoList, setTodoList] = useLocalStorage<Task[]>("todos", []);
 
   // to-do functions
-  const addModeOpen = (): void => {
+  const startAddingTask = (): void => {
     setAddMode(true);
   };
 
-  const addModeClose = (): void => {
+  const stopAddingTask = (): void => {
     setInput("");
     setAddMode(false);
   };
-  const handleCardSubmit = (): void => {
+  const addTask = (): void => {
     if (input.trim() !== "") {
       setTodoList([
         ...todoList,
@@ -57,28 +57,28 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
           isCompleted: false,
         },
       ]);
-      addModeClose();
+      stopAddingTask();
     }
   };
 
   // focus-task functions
-  const handleNext = (task: Task): void => {
+  const startFocusingTask = (task: Task): void => {
     setFocusTask(task);
     setIsFocusOn(true);
   };
 
-  const handleBack = (): void => {
+  const stopFocusingTask = (): void => {
     setIsFocusOn(false);
     clearBadge();
   };
 
-  const handleDelete = (id: number): void => {
+  const deleteTask = (id: number): void => {
     setIsFocusOn(false);
     setTodoList(todoList.filter((val) => id !== val.id));
     clearBadge();
   };
 
-  const handleComplete = (id: number): void => {
+  const completeTask = (id: number): void => {
     setIsFocusOn(false);
     setTodoList(
       todoList.map((val) => {
@@ -95,9 +95,9 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
     return (
       <Suspense fallback={<LinearProgress />}>
         <FocusTask
-          handleDelete={handleDelete}
-          handleComplete={handleComplete}
-          handleBack={handleBack}
+          handleDelete={deleteTask}
+          handleComplete={completeTask}
+          handleBack={stopFocusingTask}
           {...focusTask}
         />
       </Suspense>
@@ -126,7 +126,7 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
             startIcon={<AddTaskRoundedIcon />}
             fullWidth
             className="btn"
-            onClick={addModeOpen}
+            onClick={startAddingTask}
           >
             Create new task
           </Button>
@@ -135,7 +135,7 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
             <ArrowBackRoundedIcon
               fontSize="small"
               className="customIcon"
-              onClick={addModeClose}
+              onClick={stopAddingTask}
             />
             <TextField
               fullWidth
@@ -152,7 +152,7 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
               variant="contained"
               size="small"
               fullWidth
-              onClick={handleCardSubmit}
+              onClick={addTask}
               className="btn btn2"
             >
               Add
@@ -181,7 +181,7 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
                 <span
                   title="Begin focus mode"
                   className="customIconBox"
-                  onClick={() => handleNext({ name, id, isCompleted })}
+                  onClick={() => startFocusingTask({ name, id, isCompleted })}
                 >
                   <NavigateNextTwoToneIcon color="inherit" />
                 </span>
