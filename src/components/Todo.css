@@ -6,17 +6,36 @@
 .todo header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: baseline;
 }
 
-.todo header .icon {
+.todo header .headerIcon {
     cursor: pointer;
+    position: relative;
 }
 
+.todo header .headerIcon .settingsIcon {
+    position: absolute;
+    top: 10px;
+    right: 0;
+    font-size: 14px;
+    background-color: #F8B895;
+    padding: 1px;
+    border-radius: 50%;
+}
 .todo .addTask {
-    margin-top: var(--default-spacing-lg);
-    margin-bottom: var(--default-spacing);
+    margin: var(--default-spacing) 0px;
     text-align: left;
+}
+
+.todo .addTask .btn {
+    padding: var(--default-spacing-xs);
+    text-transform: capitalize;
+}
+
+.todo .addTask .btn1 {
+    background-color: var(--default-background-color-action);
+    border-color: var(--default-background-color-action);
 }
 
 .todo .addTask .btn2 {

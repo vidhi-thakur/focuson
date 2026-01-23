@@ -1,6 +1,7 @@
 import { ChangeEvent, FC, lazy, Suspense } from "react";
 import SettingsIcon from "@mui/icons-material/Settings";
-import AddTaskRoundedIcon from "@mui/icons-material/AddTaskRounded";
+import AddIcon from "@mui/icons-material/Add";
+import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined';
 import "./Todo.css";
 import { Button, LinearProgress } from "@mui/material";
 import { useLocalStorage } from "../customHooks/useLocalStorage";
@@ -110,22 +111,23 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
       <header>
         <div>
           <h2>To-Do List</h2>
-          <small>Stay on top of your goals - add your tasks here</small>
+          <small>Stay on top of your goals</small>
         </div>
-        <span title="Block sites">
-          <SettingsIcon onClick={redirectToSetting} className="icon" color="primary" />
-        </span>
+        <div title="Block distracting websites" className="headerIcon" onClick={redirectToSetting}>
+          <ShieldOutlinedIcon className="shieldIcon" />
+          <SettingsIcon fontSize="small" className="settingsIcon" />
+        </div>
       </header>
 
       {/* add new task */}
       <section className="addTask">
         {!addMode ? (
           <Button
-            variant="contained"
+            variant="outlined"
             size="small"
-            startIcon={<AddTaskRoundedIcon />}
+            startIcon={<AddIcon />}
             fullWidth
-            className="btn"
+            className="btn btn1"
             onClick={startAddingTask}
           >
             Create new task
