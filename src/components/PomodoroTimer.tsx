@@ -76,8 +76,6 @@ const PomodoroTimer: FC = () => {
       clearInterval(id);
     }
 
-    return () => clearInterval(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isTimerOn]);
 
   const startTimer = (): void => {
