@@ -1,14 +1,19 @@
-import { Button, ButtonGroup, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import {
+  Button,
+  ButtonGroup,
+  ToggleButton,
+  ToggleButtonGroup,
+} from "@mui/material";
 import { FC, useEffect } from "react";
-import CheckIcon from '@mui/icons-material/Check';
+import CheckIcon from "@mui/icons-material/Check";
 import "./PomodoroTimer.css";
 import { useLocalStorage } from "../customHooks/useLocalStorage";
 import { clearBadge, updateBadge } from "../helpers/badgeControl";
 import { notifyTimerComplete } from "../helpers/notificationHelper";
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import PauseIcon from '@mui/icons-material/Pause';
-import KeyboardBackspaceOutlinedIcon from '@mui/icons-material/KeyboardBackspaceOutlined';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PauseIcon from "@mui/icons-material/Pause";
+import KeyboardBackspaceOutlinedIcon from "@mui/icons-material/KeyboardBackspaceOutlined";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 interface Option {
   id: number;
@@ -56,17 +61,29 @@ const PomodoroTimer: FC<PomodoroTimerProps> = ({
   id,
   isCompleted,
 }) => {
-  const [currAction, setCurrAction] = useLocalStorage<string>("currAction", OPTIONS[0].name);
-  const [isTimerOn, setIsTimerOn] = useLocalStorage<boolean>("isTimerOn", false);
+  const [currAction, setCurrAction] = useLocalStorage<string>(
+    "currAction",
+    OPTIONS[0].name,
+  );
+  const [isTimerOn, setIsTimerOn] = useLocalStorage<boolean>(
+    "isTimerOn",
+    false,
+  );
   const [currTime, setCurrTime] = useLocalStorage<Time>("currTime", {
-    min: OPTIONS[OPTIONS.findIndex(option => option.name === currAction)].duration,
+    min: OPTIONS[OPTIONS.findIndex((option) => option.name === currAction)]
+      .duration,
     sec: 0,
   });
 
   // Update badge whenever timer state or time changes (including on mount)
   useEffect(() => {
     if (isTimerOn) {
-      updateBadge(currTime.min, currTime.sec, true, OPTIONS.findIndex(option => option.name === currAction));
+      updateBadge(
+        currTime.min,
+        currTime.sec,
+        true,
+        OPTIONS.findIndex((option) => option.name === currAction),
+      );
     } else {
       clearBadge();
     }
@@ -97,12 +114,16 @@ const PomodoroTimer: FC<PomodoroTimerProps> = ({
     }
 
     return () => clearInterval(id);
-
   }, [isTimerOn]);
 
   const startTimer = (): void => {
     setIsTimerOn(true);
-    updateBadge(currTime.min, currTime.sec, true, OPTIONS.findIndex(option => option.name === currAction));
+    updateBadge(
+      currTime.min,
+      currTime.sec,
+      true,
+      OPTIONS.findIndex((option) => option.name === currAction),
+    );
   };
   const stopTimer = (): void => {
     setIsTimerOn(false);
@@ -114,17 +135,24 @@ const PomodoroTimer: FC<PomodoroTimerProps> = ({
     newVal: string | null,
   ) => {
     setCurrAction(newVal as string);
-    const newTime = { min: OPTIONS[OPTIONS.findIndex(option => option.name === newVal)].duration, sec: 0 };
+    const newTime = {
+      min: OPTIONS[OPTIONS.findIndex((option) => option.name === newVal)]
+        .duration,
+      sec: 0,
+    };
     setCurrTime(newTime);
     // Update badge if timer is running
     if (isTimerOn) {
-      updateBadge(newTime.min, newTime.sec, true, OPTIONS.findIndex(option => option.name === newVal));
+      updateBadge(
+        newTime.min,
+        newTime.sec,
+        true,
+        OPTIONS.findIndex((option) => option.name === newVal),
+      );
     }
   };
 
   return (
-
-
     <div className="focusTask">
       {/* header section: task name, back option, delete task */}
       <header>
@@ -159,7 +187,6 @@ const PomodoroTimer: FC<PomodoroTimerProps> = ({
             </h2>
           </section>
 
-
           {/* click and change options */}
           <section className="timerActions">
             <ToggleButtonGroup
@@ -182,28 +209,37 @@ const PomodoroTimer: FC<PomodoroTimerProps> = ({
           </section>
 
           {/* start/stop timer CTA */}
-          <Button variant="contained" fullWidth endIcon={isTimerOn ? <PauseIcon /> : <PlayArrowIcon />} onClick={isTimerOn ? stopTimer : startTimer} disableElevation disableRipple disabled={isCompleted}>
+          <Button
+            variant="contained"
+            fullWidth
+            endIcon={isTimerOn ? <PauseIcon /> : <PlayArrowIcon />}
+            onClick={isTimerOn ? stopTimer : startTimer}
+            disableElevation
+            disableRipple
+            disabled={isCompleted}
+          >
             {isTimerOn ? "Stop" : "Start"}
           </Button>
-
         </div>
       </section>
 
       {/* btn to mark task as complete */}
-      {!isCompleted && <Button
-        size="small"
-        variant="outlined"
-        fullWidth
-        startIcon={<CheckIcon />}
-        className="completeBtn"
-        onClick={(): void => {
-          id !== undefined && handleComplete(id);
-          clearBadge();
-        }}
-        disabled={isCompleted}
-      >
-        Mark complete
-      </Button>}
+      {!isCompleted && (
+        <Button
+          size="small"
+          variant="outlined"
+          fullWidth
+          startIcon={<CheckIcon />}
+          className="completeBtn"
+          onClick={(): void => {
+            id !== undefined && handleComplete(id);
+            clearBadge();
+          }}
+          disabled={isCompleted}
+        >
+          Mark complete
+        </Button>
+      )}
     </div>
   );
 };

@@ -1,13 +1,13 @@
 import { ChangeEvent, FC, lazy, Suspense } from "react";
 import SettingsIcon from "@mui/icons-material/Settings";
 import AddIcon from "@mui/icons-material/Add";
-import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined';
+import ShieldOutlinedIcon from "@mui/icons-material/ShieldOutlined";
 import "./Todo.css";
 import { Button, LinearProgress } from "@mui/material";
 import { useLocalStorage } from "../customHooks/useLocalStorage";
 import { clearBadge } from "../helpers/badgeControl";
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import KeyboardBackspaceOutlinedIcon from '@mui/icons-material/KeyboardBackspaceOutlined';
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import KeyboardBackspaceOutlinedIcon from "@mui/icons-material/KeyboardBackspaceOutlined";
 import TextField from "@mui/material/TextField";
 import { NoData } from "./NoData";
 const PomodoroTimer = lazy(() => import("./PomodoroTimer"));
@@ -27,11 +27,11 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
   const [input, setInput] = useLocalStorage<string>("input", "");
   const [isFocusOn, setIsFocusOn] = useLocalStorage<boolean>(
     "isFocusOn",
-    false
+    false,
   );
   const [focusTask, setFocusTask] = useLocalStorage<Task | null>(
     "focusTask",
-    null
+    null,
   );
 
   const [todoList, setTodoList] = useLocalStorage<Task[]>("todos", []);
@@ -85,7 +85,7 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
           ...val,
           isCompleted: true,
         };
-      })
+      }),
     );
   };
 
@@ -110,7 +110,11 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
           <h2>To-Do List</h2>
           <small>Stay on top of your goals</small>
         </div>
-        <div title="Block distracting websites" className="headerIcon" onClick={redirectToSetting}>
+        <div
+          title="Block distracting websites"
+          className="headerIcon"
+          onClick={redirectToSetting}
+        >
           <ShieldOutlinedIcon className="shieldIcon" />
           <SettingsIcon fontSize="small" className="settingsIcon" />
         </div>
@@ -164,34 +168,38 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
       {/* display todolist */}
       <section className="todoList">
         <ul>
-          {todoList.length > 0 ? todoList.map(({ name, id, isCompleted }) => {
-            return (
-              <li
-                key={id}
-                style={
-                  isCompleted
-                    ? { textDecoration: "line-through", opacity: 0.5 }
-                    : {}
-                }
-              >
-                {/* a div to display content, add ellipsis  */}
-                <p>{name}</p>
-
-                {/* next icon to select task */}
-                <Button
-                  variant="contained"
-                  size="small"
-                  endIcon={<PlayArrowIcon color="inherit" fontSize="small" />}
-                  fullWidth
-                  className="btn btn3"
-                  onClick={() => startFocusingTask({ name, id, isCompleted })}
-                  disableElevation
+          {todoList.length > 0 ? (
+            todoList.map(({ name, id, isCompleted }) => {
+              return (
+                <li
+                  key={id}
+                  style={
+                    isCompleted
+                      ? { textDecoration: "line-through", opacity: 0.5 }
+                      : {}
+                  }
                 >
-                  Focus
-                </Button>
-              </li>
-            );
-          }) : <NoData message="No task yet." />}
+                  {/* a div to display content, add ellipsis  */}
+                  <p>{name}</p>
+
+                  {/* next icon to select task */}
+                  <Button
+                    variant="contained"
+                    size="small"
+                    endIcon={<PlayArrowIcon color="inherit" fontSize="small" />}
+                    fullWidth
+                    className="btn btn3"
+                    onClick={() => startFocusingTask({ name, id, isCompleted })}
+                    disableElevation
+                  >
+                    Focus
+                  </Button>
+                </li>
+              );
+            })
+          ) : (
+            <NoData message="No task yet." />
+          )}
         </ul>
       </section>
     </div>
