@@ -1,12 +1,10 @@
-import { Button, ButtonGroup, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { Button, ButtonGroup } from "@mui/material";
 import { FC, useEffect } from "react";
 import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import "./PomodoroTimer.css";
 import { useLocalStorage } from "../customHooks/useLocalStorage";
 import { clearBadge, updateBadge } from "../helpers/badgeControl";
 import { notifyTimerComplete } from "../helpers/notificationHelper";
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import PauseIcon from '@mui/icons-material/Pause';
 
 interface Option {
   id: number;
@@ -22,37 +20,37 @@ interface Time {
 const OPTIONS: Option[] = [
   {
     id: 0,
-    name: "Pomodoro",
+    name: "Pomodoro: 25 min",
     duration: 25,
   },
   {
     id: 1,
-    name: "Short Break",
+    name: "Short Break: 5 min",
     duration: 5,
   },
   {
     id: 2,
-    name: "Long Break",
+    name: "Long Break: 15 min",
     duration: 15,
   },
 ];
 
 const PomodoroTimer: FC = () => {
-  const [currAction, setCurrAction] = useLocalStorage<string>("currAction", OPTIONS[0].name);
+  const [currActionIndex, setCurrActionIndex] = useLocalStorage<number>("currActionIndex", 0);
   const [isTimerOn, setIsTimerOn] = useLocalStorage<boolean>("isTimerOn", false);
   const [currTime, setCurrTime] = useLocalStorage<Time>("currTime", {
-    min: OPTIONS[OPTIONS.findIndex(option => option.name === currAction)].duration,
+    min: OPTIONS[currActionIndex].duration,
     sec: 0,
   });
 
   // Update badge whenever timer state or time changes (including on mount)
   useEffect(() => {
     if (isTimerOn) {
-      updateBadge(currTime.min, currTime.sec, true, OPTIONS.findIndex(option => option.name === currAction));
+      updateBadge(currTime.min, currTime.sec, true, currActionIndex);
     } else {
       clearBadge();
     }
-  }, [isTimerOn, currTime.min, currTime.sec, currAction]);
+  }, [isTimerOn, currTime.min, currTime.sec, currActionIndex]);
 
   useEffect(() => {
     let id: NodeJS.Timer | number | undefined;
@@ -67,7 +65,7 @@ const PomodoroTimer: FC = () => {
             setIsTimerOn(false);
             clearBadge();
             // Trigger notification when timer completes
-            notifyTimerComplete(currAction);
+            notifyTimerComplete(OPTIONS[currActionIndex].name);
             return val;
           } else {
             return { ...val, sec: val.sec - 1 };
@@ -78,29 +76,25 @@ const PomodoroTimer: FC = () => {
       clearInterval(id);
     }
 
-    return () => clearInterval(id);
-
   }, [isTimerOn]);
 
   const startTimer = (): void => {
     setIsTimerOn(true);
-    updateBadge(currTime.min, currTime.sec, true, OPTIONS.findIndex(option => option.name === currAction));
+    updateBadge(currTime.min, currTime.sec, true, currActionIndex);
   };
   const stopTimer = (): void => {
     setIsTimerOn(false);
     clearBadge();
   };
 
-  const changeAction = (
-    event: React.MouseEvent<HTMLElement>,
-    newVal: string | null,
-  ) => {
-    setCurrAction(newVal as string);
-    const newTime = { min: OPTIONS[OPTIONS.findIndex(option => option.name === newVal)].duration, sec: 0 };
+  const changeAction = (): void => {
+    const index = (currActionIndex + 1) % OPTIONS.length;
+    setCurrActionIndex(index);
+    const newTime = { min: OPTIONS[index].duration, sec: 0 };
     setCurrTime(newTime);
     // Update badge if timer is running
     if (isTimerOn) {
-      updateBadge(newTime.min, newTime.sec, true, OPTIONS.findIndex(option => option.name === newVal));
+      updateBadge(newTime.min, newTime.sec, true, index);
     }
   };
 
@@ -116,28 +110,33 @@ const PomodoroTimer: FC = () => {
         </section>
 
         {/* start/stop timer CTA */}
-        <Button variant="contained" fullWidth endIcon={isTimerOn ? <PauseIcon /> : <PlayArrowIcon />} onClick={isTimerOn ? stopTimer : startTimer} disableElevation disableRipple>
-          {isTimerOn ? "Stop" : "Start"}
-        </Button>
+        <ButtonGroup
+          className="timerControls"
+          disableElevation
+          variant="contained"
+          fullWidth
+        >
+          <Button disabled={isTimerOn} onClick={startTimer}>
+            Start
+          </Button>
+          <Button disabled={!isTimerOn} onClick={stopTimer}>
+            Stop
+          </Button>
+        </ButtonGroup>
 
         {/* click and change options */}
         <section className="timerActions">
-          <ToggleButtonGroup
-            value={currAction}
-            exclusive
-            onChange={changeAction}
-            color="primary"
+          <Button
+            className="btn"
+            fullWidth
+            startIcon={<UnfoldMoreIcon />}
+            onClick={changeAction}
+            variant="contained"
+            disableElevation
+            disabled={isTimerOn}
           >
-            <ToggleButton value="Pomodoro" aria-label="pomodoro">
-              Pomodoro
-            </ToggleButton>
-            <ToggleButton value="Short Break" aria-label="shortBreak">
-              Short Break
-            </ToggleButton>
-            <ToggleButton value="Long Break" aria-label="longBreak">
-              Long Break
-            </ToggleButton>
-          </ToggleButtonGroup>
+            {OPTIONS[currActionIndex].name}
+          </Button>
         </section>
       </div>
     </div>
