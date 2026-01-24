@@ -156,6 +156,7 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
               fullWidth
               onClick={addTask}
               className="btn btn2"
+              disableElevation
             >
               Add
             </Button>

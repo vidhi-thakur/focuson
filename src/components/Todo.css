@@ -39,7 +39,10 @@
 }
 
 .todo .addTask .btn2 {
-    margin-top: var(--default-spacing);
+    margin-top: var(--default-spacing-sm);
+    background-color: var(--default-background-color-action);
+    border-color: var(--default-background-color-action);
+    color: black;
 }
 
 .todo .addTask .MuiInputBase-root {
