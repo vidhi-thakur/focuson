@@ -1,10 +1,11 @@
 import { FC, lazy, useState, useEffect, ChangeEvent } from 'react';
 import { Button, TextField } from '@mui/material';
-import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
-import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import './Setting.css';
 import { useLocalStorage } from '../customHooks/useLocalStorage';
 import { syncBlockedUrls } from '../helpers/badgeControl';
+import { NoData } from './NoData';
 const KeyboardBackspaceOutlinedIcon = lazy(() => import('@mui/icons-material/KeyboardBackspaceOutlined'));
 
 interface SettingProps {
@@ -142,11 +143,7 @@ const Setting: FC<SettingProps> = ({ handleBack }) => {
             <section className="urlList">
                 <ul>
                     {urls.length === 0 ? (
-                        <li>
-                            <p style={{ opacity: 0.6, fontStyle: 'italic' }}>
-                                No blocked URLs.
-                            </p>
-                        </li>
+                        <NoData message="No blocked URLs." />
                     ) : (
                         urls.map((val, index) => {
                             return (
@@ -180,28 +177,20 @@ const Setting: FC<SettingProps> = ({ handleBack }) => {
                                             </Button>
                                         </div>
                                     ) : (
-                                        <>
+                                        <div className="urlItem">
                                             {/* a div to display content, add ellipsis  */}
                                             <p>{val}</p>
 
                                             {/* edit and delete icons */}
-                                            <div style={{ display: 'flex', gap: '4px' }}>
-                                                <span
-                                                    className="customIconBox"
-                                                    onClick={() => handleEdit(index, val)}
-                                                    title="Edit URL"
-                                                >
-                                                    <EditRoundedIcon fontSize="small" />
+                                            <div className="iconBox">
+                                                <span onClick={() => handleEdit(index, val)}>
+                                                    <EditOutlinedIcon fontSize="small" />
                                                 </span>
-                                                <span
-                                                    className="customIconBox"
-                                                    onClick={() => handleDelete(val)}
-                                                    title="Delete URL"
-                                                >
-                                                    <DeleteRoundedIcon fontSize="small" />
+                                                <span onClick={() => handleDelete(val)}>
+                                                    <DeleteOutlineOutlinedIcon fontSize="small" />
                                                 </span>
                                             </div>
-                                        </>
+                                        </div>
                                     )}
                                 </li>
                             );

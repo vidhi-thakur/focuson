@@ -1,0 +1,22 @@
+.noData {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.noData .noDataContent {
+    background-color: white;
+    border-radius: var(--default-spacing-sm);
+    padding: var(--default-spacing);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.noData .noDataContent p {
+    font-size: 14px;
+    color: var(--default-text-color);
+}

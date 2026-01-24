@@ -1,3 +1,9 @@
+.setting {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
 .setting header {
     text-align: left;
     position: relative;
@@ -11,8 +17,17 @@
     width: 170px;
 }
 
+.setting .urlList {
+    flex: 1;
+    height: 100%;
+}
+
 .setting .urlList ul {
     padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--default-spacing-sm);
 }
 
 .setting .urlList li {
@@ -50,4 +65,24 @@
 
 .setting .form .MuiFormHelperText-root {
     margin: var(--default-spacing-xs) 0px;
+}
+
+.setting .urlItem {
+    background-color: white;
+    padding: var(--default-spacing-sm) var(--default-spacing);
+    border-radius: var(--default-spacing-sm);
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.setting .urlItem .iconBox {
+    display: flex;
+    gap: var(--default-spacing-sm);
+}
+
+.setting .urlItem .iconBox span {
+    cursor: pointer;
+    padding: 4px;
 }
