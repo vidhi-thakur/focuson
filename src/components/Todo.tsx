@@ -191,7 +191,7 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
                 </Button>
               </li>
             );
-          }) : <NoData message="No focus task" />}
+          }) : <NoData message="No task yet." />}
         </ul>
       </section>
     </div>
