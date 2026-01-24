@@ -9,6 +9,7 @@ import { clearBadge } from "../helpers/badgeControl";
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import KeyboardBackspaceOutlinedIcon from '@mui/icons-material/KeyboardBackspaceOutlined';
 import TextField from "@mui/material/TextField";
+import { NoData } from "./NoData";
 const FocusTask = lazy(() => import("./FocusTask"));
 
 interface Task {
@@ -163,7 +164,7 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
       {/* display todolist */}
       <section className="todoList">
         <ul>
-          {todoList.map(({ name, id, isCompleted }) => {
+          {todoList.length > 0 ? todoList.map(({ name, id, isCompleted }) => {
             return (
               <li
                 key={id}
@@ -190,7 +191,7 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
                 </Button>
               </li>
             );
-          })}
+          }) : <NoData message="No focus task" />}
         </ul>
       </section>
     </div>
