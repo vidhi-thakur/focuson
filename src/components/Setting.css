@@ -1,9 +1,14 @@
 .setting header {
     text-align: left;
+    position: relative;
 }
 
-.setting .urlList {
-    margin: var(--default-spacing-lg) 0px;
+.setting header h2 {
+    position: absolute;
+    top: -7px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 170px;
 }
 
 .setting .urlList ul {
@@ -29,4 +34,20 @@
 .setting .form {
     display: flex;
     gap: var(--default-spacing-sm);
+    margin: var(--default-spacing) 0px var(--default-spacing-sm) 0px;
+}
+
+.setting .form .MuiInputBase-root {
+    background-color: white;
+}
+
+.setting .form .btn {
+    text-transform: capitalize;
+    background-color: var(--default-background-color-action);
+    color: black;
+    height: 40px;
+}
+
+.setting .form .MuiFormHelperText-root {
+    margin: var(--default-spacing-xs) 0px;
 }

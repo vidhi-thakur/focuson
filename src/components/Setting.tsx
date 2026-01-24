@@ -1,11 +1,11 @@
-import { FC, lazy, useState, useEffect } from 'react';
+import { FC, lazy, useState, useEffect, ChangeEvent } from 'react';
 import { Button, TextField } from '@mui/material';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import './Setting.css';
 import { useLocalStorage } from '../customHooks/useLocalStorage';
 import { syncBlockedUrls } from '../helpers/badgeControl';
-const ArrowBackRoundedIcon = lazy(() => import('@mui/icons-material/ArrowBackRounded'));
+const KeyboardBackspaceOutlinedIcon = lazy(() => import('@mui/icons-material/KeyboardBackspaceOutlined'));
 
 interface SettingProps {
     handleBack: () => void
@@ -16,7 +16,7 @@ const Setting: FC<SettingProps> = ({ handleBack }) => {
     const [urls, setUrls] = useLocalStorage<string[]>("blockedUrls", []);
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
     const [editValue, setEditValue] = useState<string>("");
-
+    const [error, setError] = useState<string>("");
     // Sync blocked URLs with background script
     useEffect(() => {
         syncBlockedUrls(urls);
@@ -40,17 +40,20 @@ const Setting: FC<SettingProps> = ({ handleBack }) => {
     };
 
     const updateURL = (): void => {
-        if (input.trim() === "") return;
-        
+        if (input.trim() === "") {
+            setError("Add a URL");
+            return;
+        };
+
         const normalized = normalizeUrl(input);
         if (!validateUrl(normalized)) {
-            alert("Please enter a valid URL (e.g., facebook.com, youtube.com)");
+            setError("Invalid URL");
             return;
         }
 
         // Check for duplicates
         if (urls.includes(normalized)) {
-            alert("This URL is already in the list");
+            setError("URL exists in the blocked list");
             setInput("");
             return;
         }
@@ -70,16 +73,16 @@ const Setting: FC<SettingProps> = ({ handleBack }) => {
 
     const handleSaveEdit = (): void => {
         if (editingIndex === null) return;
-        
+
         const normalized = normalizeUrl(editValue);
         if (!validateUrl(normalized)) {
-            alert("Please enter a valid URL");
+            setError("Invalid URL");
             return;
         }
 
         // Check for duplicates (excluding current item)
         if (urls.some((url, idx) => url === normalized && idx !== editingIndex)) {
-            alert("This URL is already in the list");
+            setError("URL exists in the blocked list");
             return;
         }
 
@@ -101,9 +104,39 @@ const Setting: FC<SettingProps> = ({ handleBack }) => {
         <div className='setting'>
             {/* heading, icon to go back */}
             <header>
-                <ArrowBackRoundedIcon fontSize="small" className="customIcon" onClick={handleBack} />
-                <h2>Add URLs to block</h2>
+                <KeyboardBackspaceOutlinedIcon fontSize="small" className="customIcon" onClick={handleBack} />
+                <h2>Block websites</h2>
             </header>
+
+            {/* input to add new icons */}
+
+            <section className='form'>
+                <TextField
+                    fullWidth
+                    error={!!error}
+                    helperText={error}
+                    variant="outlined"
+                    size="small"
+                    value={input}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                        setInput(e.target.value);
+                        setError("");
+                    }}
+                    onKeyPress={(e) => {
+                        if (e.key === 'Enter') updateURL();
+                    }}
+                    placeholder="example.com"
+                />
+                <Button
+                    variant="contained"
+                    size="small"
+                    onClick={updateURL}
+                    className="btn"
+                    disableElevation
+                >
+                    Add
+                </Button>
+            </section>
 
             {/* display list of added url with delete and edit icons */}
             <section className="urlList">
@@ -111,7 +144,7 @@ const Setting: FC<SettingProps> = ({ handleBack }) => {
                     {urls.length === 0 ? (
                         <li>
                             <p style={{ opacity: 0.6, fontStyle: 'italic' }}>
-                                No blocked URLs. Add URLs to block during focus sessions.
+                                No blocked URLs.
                             </p>
                         </li>
                     ) : (
@@ -175,31 +208,6 @@ const Setting: FC<SettingProps> = ({ handleBack }) => {
                         })
                     )}
                 </ul>
-            </section>
-
-            {/* input to add new icons */}
-
-            <section className='form'>
-                <TextField
-                    fullWidth
-                    label="Add URL (e.g., facebook.com, youtube.com)"
-                    variant="outlined"
-                    size="small"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyPress={(e) => {
-                        if (e.key === 'Enter') updateURL();
-                    }}
-                    placeholder="example.com"
-                />
-                <Button
-                    variant="contained"
-                    size="small"
-                    onClick={updateURL}
-                    disabled={input.trim() === ""}
-                >
-                    Add
-                </Button>
             </section>
         </div>
     )

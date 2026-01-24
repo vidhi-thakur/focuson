@@ -8,8 +8,8 @@ import { useLocalStorage } from "../customHooks/useLocalStorage";
 import { clearBadge } from "../helpers/badgeControl";
 const FocusTask = lazy(() => import("./FocusTask"));
 const TextField = lazy(() => import("@mui/material/TextField"));
-const ArrowBackRoundedIcon = lazy(
-  () => import("@mui/icons-material/ArrowBackRounded")
+const KeyboardBackspaceOutlinedIcon = lazy(
+  () => import("@mui/icons-material/KeyboardBackspaceOutlined")
 );
 const NavigateNextTwoToneIcon = lazy(
   () => import("@mui/icons-material/NavigateNextTwoTone")
@@ -134,7 +134,7 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
           </Button>
         ) : (
           <section>
-            <ArrowBackRoundedIcon
+            <KeyboardBackspaceOutlinedIcon
               fontSize="small"
               className="customIcon"
               onClick={stopAddingTask}

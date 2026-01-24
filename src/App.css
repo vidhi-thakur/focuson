@@ -36,7 +36,6 @@
 /* COMMON CSS - CSS for icons for consistency in design */
 .customIcon {
   cursor: pointer;
-  fill: var(--icon-color) !important;
 }
 
 .customIconBox {
