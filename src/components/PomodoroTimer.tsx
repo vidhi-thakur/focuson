@@ -1,6 +1,7 @@
 import {
   Button,
   ButtonGroup,
+  CircularProgress,
   ToggleButton,
   ToggleButtonGroup,
 } from "@mui/material";
@@ -152,6 +153,12 @@ const PomodoroTimer: FC<PomodoroTimerProps> = ({
     }
   };
 
+  const progress =
+    ((currTime.min * 60 + currTime.sec) /
+      ((OPTIONS.find((option) => option.name === currAction)?.duration || 0) *
+        60)) *
+    100;
+
   return (
     <div className="focusTask">
       {/* header section: task name, back option, delete task */}
@@ -173,75 +180,104 @@ const PomodoroTimer: FC<PomodoroTimerProps> = ({
             }}
           />
         </nav>
-        <h3 style={{ marginTop: "var(--default-spacing)" }}>{name}</h3>
+        <h3>{name}</h3>
       </header>
 
       {/* display pomodoro */}
       <section className="pomodoro">
-        <div className="container">
-          {/* count down time */}
-          <section className="countdownTimer">
-            <h2>
-              {currTime.min > 9 ? currTime.min : `0${currTime.min}`}:
-              {currTime.sec > 9 ? currTime.sec : `0${currTime.sec}`}
-            </h2>
-          </section>
+        {/* count down time */}
+        <section className="countdownTimer">
+          <GradientCircularProgress value={progress} />
+          <h4>
+            {currTime.min > 9 ? currTime.min : `0${currTime.min}`}:
+            {currTime.sec > 9 ? currTime.sec : `0${currTime.sec}`}
+          </h4>
+        </section>
 
-          {/* click and change options */}
-          <section className="timerActions">
-            <ToggleButtonGroup
-              value={currAction}
-              exclusive
-              onChange={changeAction}
-              color="primary"
-              disabled={isTimerOn}
-            >
-              <ToggleButton value="Pomodoro" aria-label="pomodoro">
-                Pomodoro
-              </ToggleButton>
-              <ToggleButton value="Short Break" aria-label="shortBreak">
-                Short Break
-              </ToggleButton>
-              <ToggleButton value="Long Break" aria-label="longBreak">
-                Long Break
-              </ToggleButton>
-            </ToggleButtonGroup>
-          </section>
+        {/* click and change options */}
+        <section className="timerActions">
+          <ToggleButtonGroup
+            value={currAction}
+            exclusive
+            onChange={changeAction}
+            color="primary"
+            disabled={isTimerOn}
+          >
+            <ToggleButton value="Pomodoro" aria-label="pomodoro">
+              Pomodoro
+            </ToggleButton>
+            <ToggleButton value="Short Break" aria-label="shortBreak">
+              Short Break
+            </ToggleButton>
+            <ToggleButton value="Long Break" aria-label="longBreak">
+              Long Break
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </section>
 
-          {/* start/stop timer CTA */}
+        {/* start/stop timer CTA */}
+        <Button
+          variant="contained"
+          fullWidth
+          endIcon={
+            isTimerOn ? (
+              <PauseIcon fontSize="small" />
+            ) : (
+              <PlayArrowIcon fontSize="small" />
+            )
+          }
+          onClick={isTimerOn ? stopTimer : startTimer}
+          disableElevation
+          disableRipple
+          disabled={isCompleted}
+          className="startStopBtn"
+        >
+          {isTimerOn ? "Stop" : "Start"}
+        </Button>
+
+        {/* btn to mark task as complete */}
+        {!isCompleted && (
           <Button
-            variant="contained"
+            size="small"
+            variant="outlined"
             fullWidth
-            endIcon={isTimerOn ? <PauseIcon /> : <PlayArrowIcon />}
-            onClick={isTimerOn ? stopTimer : startTimer}
-            disableElevation
-            disableRipple
+            startIcon={<CheckIcon />}
+            className="completeBtn"
+            onClick={(): void => {
+              id !== undefined && handleComplete(id);
+              clearBadge();
+            }}
             disabled={isCompleted}
           >
-            {isTimerOn ? "Stop" : "Start"}
+            Mark complete
           </Button>
-        </div>
+        )}
       </section>
-
-      {/* btn to mark task as complete */}
-      {!isCompleted && (
-        <Button
-          size="small"
-          variant="outlined"
-          fullWidth
-          startIcon={<CheckIcon />}
-          className="completeBtn"
-          onClick={(): void => {
-            id !== undefined && handleComplete(id);
-            clearBadge();
-          }}
-          disabled={isCompleted}
-        >
-          Mark complete
-        </Button>
-      )}
     </div>
   );
 };
+
+function GradientCircularProgress({ value }: { value: number }) {
+  return (
+    <>
+      <svg width={0} height={0}>
+        <defs>
+          <linearGradient id="my_gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="rgb(255, 175, 190)" />
+            <stop offset="100%" stopColor="#1976d2" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <CircularProgress
+        enableTrackSlot
+        variant="determinate"
+        value={value}
+        size={200}
+        thickness={2}
+        sx={{ "svg circle": { stroke: "url(#my_gradient)" } }}
+      />
+    </>
+  );
+}
 
 export default PomodoroTimer;
