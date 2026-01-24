@@ -10,7 +10,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import KeyboardBackspaceOutlinedIcon from '@mui/icons-material/KeyboardBackspaceOutlined';
 import TextField from "@mui/material/TextField";
 import { NoData } from "./NoData";
-const FocusTask = lazy(() => import("./FocusTask"));
+const PomodoroTimer = lazy(() => import("./PomodoroTimer"));
 
 interface Task {
   isCompleted: boolean;
@@ -92,7 +92,7 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
   if (isFocusOn) {
     return (
       <Suspense fallback={<LinearProgress />}>
-        <FocusTask
+        <PomodoroTimer
           handleDelete={deleteTask}
           handleComplete={completeTask}
           handleBack={stopFocusingTask}

@@ -1,3 +1,25 @@
+.focusTask .completeBtn {
+    margin-top: var(--default-spacing-lg);
+    background-color: var(--default-background-color-action);
+    text-transform: capitalize;
+    color: black;
+    border-color: var(--default-background-color-action);
+}
+
+.focusTask header nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.focusTask header h2 {
+    text-transform: capitalize;
+}
+
+.focusTask .pomodoro {
+    margin-top: var(--default-spacing-lg);
+}
+
 .pomodoro .container {
     width: 100%;
 }

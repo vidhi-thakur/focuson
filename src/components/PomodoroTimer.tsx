@@ -1,12 +1,14 @@
 import { Button, ButtonGroup, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { FC, useEffect } from "react";
-import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
+import CheckIcon from '@mui/icons-material/Check';
 import "./PomodoroTimer.css";
 import { useLocalStorage } from "../customHooks/useLocalStorage";
 import { clearBadge, updateBadge } from "../helpers/badgeControl";
 import { notifyTimerComplete } from "../helpers/notificationHelper";
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
+import KeyboardBackspaceOutlinedIcon from '@mui/icons-material/KeyboardBackspaceOutlined';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 interface Option {
   id: number;
@@ -37,7 +39,23 @@ const OPTIONS: Option[] = [
   },
 ];
 
-const PomodoroTimer: FC = () => {
+interface PomodoroTimerProps {
+  handleDelete: (id: number) => void;
+  handleComplete: (id: number) => void;
+  handleBack: () => void;
+  name?: string;
+  id?: number;
+  isCompleted?: boolean;
+}
+
+const PomodoroTimer: FC<PomodoroTimerProps> = ({
+  handleDelete,
+  handleComplete,
+  handleBack,
+  name,
+  id,
+  isCompleted,
+}) => {
   const [currAction, setCurrAction] = useLocalStorage<string>("currAction", OPTIONS[0].name);
   const [isTimerOn, setIsTimerOn] = useLocalStorage<boolean>("isTimerOn", false);
   const [currTime, setCurrTime] = useLocalStorage<Time>("currTime", {
@@ -105,41 +123,87 @@ const PomodoroTimer: FC = () => {
   };
 
   return (
-    <div className="pomodoro">
-      <div className="container">
-        {/* count down time */}
-        <section className="countdownTimer">
-          <h2>
-            {currTime.min > 9 ? currTime.min : `0${currTime.min}`}:
-            {currTime.sec > 9 ? currTime.sec : `0${currTime.sec}`}
-          </h2>
-        </section>
 
-        {/* start/stop timer CTA */}
-        <Button variant="contained" fullWidth endIcon={isTimerOn ? <PauseIcon /> : <PlayArrowIcon />} onClick={isTimerOn ? stopTimer : startTimer} disableElevation disableRipple>
-          {isTimerOn ? "Stop" : "Start"}
-        </Button>
 
-        {/* click and change options */}
-        <section className="timerActions">
-          <ToggleButtonGroup
-            value={currAction}
-            exclusive
-            onChange={changeAction}
-            color="primary"
-          >
-            <ToggleButton value="Pomodoro" aria-label="pomodoro">
-              Pomodoro
-            </ToggleButton>
-            <ToggleButton value="Short Break" aria-label="shortBreak">
-              Short Break
-            </ToggleButton>
-            <ToggleButton value="Long Break" aria-label="longBreak">
-              Long Break
-            </ToggleButton>
-          </ToggleButtonGroup>
-        </section>
-      </div>
+    <div className="focusTask">
+      {/* header section: task name, back option, delete task */}
+      <header>
+        <nav>
+          <KeyboardBackspaceOutlinedIcon
+            fontSize="small"
+            className="customIcon"
+            onClick={handleBack}
+          />
+
+          <h2>Focus Session</h2>
+
+          <DeleteOutlineIcon
+            fontSize="small"
+            className="customIcon"
+            onClick={(): void => {
+              id !== undefined && handleDelete(id);
+            }}
+          />
+        </nav>
+        <h3 style={{ marginTop: "var(--default-spacing)" }}>{name}</h3>
+      </header>
+
+      {/* display pomodoro */}
+      <section className="pomodoro">
+        <div className="container">
+          {/* count down time */}
+          <section className="countdownTimer">
+            <h2>
+              {currTime.min > 9 ? currTime.min : `0${currTime.min}`}:
+              {currTime.sec > 9 ? currTime.sec : `0${currTime.sec}`}
+            </h2>
+          </section>
+
+
+          {/* click and change options */}
+          <section className="timerActions">
+            <ToggleButtonGroup
+              value={currAction}
+              exclusive
+              onChange={changeAction}
+              color="primary"
+              disabled={isTimerOn}
+            >
+              <ToggleButton value="Pomodoro" aria-label="pomodoro">
+                Pomodoro
+              </ToggleButton>
+              <ToggleButton value="Short Break" aria-label="shortBreak">
+                Short Break
+              </ToggleButton>
+              <ToggleButton value="Long Break" aria-label="longBreak">
+                Long Break
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </section>
+
+          {/* start/stop timer CTA */}
+          <Button variant="contained" fullWidth endIcon={isTimerOn ? <PauseIcon /> : <PlayArrowIcon />} onClick={isTimerOn ? stopTimer : startTimer} disableElevation disableRipple disabled={isCompleted}>
+            {isTimerOn ? "Stop" : "Start"}
+          </Button>
+
+        </div>
+      </section>
+
+      {/* btn to mark task as complete */}
+      {!isCompleted && <Button
+        size="small"
+        variant="outlined"
+        fullWidth
+        startIcon={<CheckIcon />}
+        className="completeBtn"
+        onClick={(): void => {
+          id !== undefined && handleComplete(id);
+          clearBadge();
+        }}
+        disabled={isCompleted}
+      >
+        Mark complete
+      </Button>}
     </div>
   );
 };
