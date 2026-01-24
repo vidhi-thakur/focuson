@@ -23,26 +23,37 @@
     padding: 1px;
     border-radius: 50%;
 }
+
 .todo .addTask {
     margin: var(--default-spacing) 0px;
     text-align: left;
 }
 
-.todo .addTask .btn {
+.todo .btn {
     padding: var(--default-spacing-xs);
     text-transform: capitalize;
 }
 
-.todo .addTask .btn1 {
+.todo .btn1 {
     background-color: var(--default-background-color-action);
     border-color: var(--default-background-color-action);
 }
 
-.todo .addTask .btn2 {
+.todo .btn2 {
     margin-top: var(--default-spacing-sm);
     background-color: var(--default-background-color-action);
     border-color: var(--default-background-color-action);
     color: black;
+}
+
+.todo .btn3 {
+    color: #1976d2;
+    background-color: #1976d220;
+    width: 80px;
+}
+
+.todo .btn3 .MuiButton-icon {
+    margin: 0;
 }
 
 .todo .addTask .MuiInputBase-root {
@@ -51,13 +62,19 @@
 
 .todo .todoList ul {
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--default-spacing-sm);
 }
 
 .todo .todoList li {
+    background-color: white;
+    padding: var(--default-spacing-sm) var(--default-spacing);
+    border-radius: var(--default-spacing-sm);
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    cursor: default;
 }
 
 .todo .todoList li p {
@@ -67,4 +84,13 @@
     cursor: default;
     width: calc(100% - 40px);
     text-align: left;
+}
+
+.todo .todoList li .startFocus {
+    display: flex;
+    align-items: center;
+}
+
+.todo .todoList li .startFocus div {
+    width: 78px;
 }

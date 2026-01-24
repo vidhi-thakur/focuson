@@ -6,14 +6,10 @@ import "./Todo.css";
 import { Button, LinearProgress } from "@mui/material";
 import { useLocalStorage } from "../customHooks/useLocalStorage";
 import { clearBadge } from "../helpers/badgeControl";
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import KeyboardBackspaceOutlinedIcon from '@mui/icons-material/KeyboardBackspaceOutlined';
+import TextField from "@mui/material/TextField";
 const FocusTask = lazy(() => import("./FocusTask"));
-const TextField = lazy(() => import("@mui/material/TextField"));
-const KeyboardBackspaceOutlinedIcon = lazy(
-  () => import("@mui/icons-material/KeyboardBackspaceOutlined")
-);
-const NavigateNextTwoToneIcon = lazy(
-  () => import("@mui/icons-material/NavigateNextTwoTone")
-);
 
 interface Task {
   isCompleted: boolean;
@@ -181,13 +177,17 @@ const Todo: FC<TodoProps> = ({ redirectToSetting }) => {
                 <p>{name}</p>
 
                 {/* next icon to select task */}
-                <span
-                  title="Begin focus mode"
-                  className="customIconBox"
+                <Button
+                  variant="contained"
+                  size="small"
+                  endIcon={<PlayArrowIcon color="inherit" fontSize="small" />}
+                  fullWidth
+                  className="btn btn3"
                   onClick={() => startFocusingTask({ name, id, isCompleted })}
+                  disableElevation
                 >
-                  <NavigateNextTwoToneIcon color="inherit" />
-                </span>
+                  Focus
+                </Button>
               </li>
             );
           })}
