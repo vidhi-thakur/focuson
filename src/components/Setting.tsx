@@ -6,6 +6,8 @@ import './Setting.css';
 import { useLocalStorage } from '../customHooks/useLocalStorage';
 import { syncBlockedUrls } from '../helpers/badgeControl';
 import { NoData } from './NoData';
+import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
+import CloseIcon from '@mui/icons-material/Close';
 const KeyboardBackspaceOutlinedIcon = lazy(() => import('@mui/icons-material/KeyboardBackspaceOutlined'));
 
 interface SettingProps {
@@ -149,7 +151,7 @@ const Setting: FC<SettingProps> = ({ handleBack }) => {
                             return (
                                 <li key={index}>
                                     {editingIndex === index ? (
-                                        <div style={{ display: 'flex', gap: '8px', width: '100%', alignItems: 'center' }}>
+                                        <div className="urlItem-edit">
                                             <TextField
                                                 size="small"
                                                 value={editValue}
@@ -161,20 +163,14 @@ const Setting: FC<SettingProps> = ({ handleBack }) => {
                                                 autoFocus
                                                 style={{ flex: 1 }}
                                             />
-                                            <Button
-                                                size="small"
-                                                variant="contained"
-                                                onClick={handleSaveEdit}
-                                            >
-                                                Save
-                                            </Button>
-                                            <Button
-                                                size="small"
-                                                variant="outlined"
-                                                onClick={handleCancelEdit}
-                                            >
-                                                Cancel
-                                            </Button>
+                                            <div className="iconBox">
+                                                <span onClick={handleSaveEdit}>
+                                                    <CheckOutlinedIcon fontSize="small" />
+                                                </span>
+                                                <span onClick={handleCancelEdit}>
+                                                    <CloseIcon fontSize="small" />
+                                                </span>
+                                            </div>
                                         </div>
                                     ) : (
                                         <div className="urlItem">

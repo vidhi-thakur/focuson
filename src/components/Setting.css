@@ -52,7 +52,7 @@
     margin: var(--default-spacing) 0px var(--default-spacing-sm) 0px;
 }
 
-.setting .form .MuiInputBase-root {
+.setting .MuiInputBase-root {
     background-color: white;
 }
 
@@ -77,12 +77,20 @@
     align-items: center;
 }
 
-.setting .urlItem .iconBox {
+.setting .urlItem-edit {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    align-items: center;
+    padding-right: var(--default-spacing);
+}
+
+.setting div.iconBox {
     display: flex;
     gap: var(--default-spacing-sm);
 }
 
-.setting .urlItem .iconBox span {
+.setting div.iconBox span {
     cursor: pointer;
     padding: 4px;
 }
