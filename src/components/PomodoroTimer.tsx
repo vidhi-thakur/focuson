@@ -5,7 +5,7 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from "@mui/material";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import CheckIcon from "@mui/icons-material/Check";
 import "./PomodoroTimer.css";
 import { useLocalStorage } from "../customHooks/useLocalStorage";
@@ -64,11 +64,11 @@ const PomodoroTimer: FC<PomodoroTimerProps> = ({
 }) => {
   const [currAction, setCurrAction] = useLocalStorage<string>(
     "currAction",
-    OPTIONS[0].name,
+    OPTIONS[0].name
   );
   const [isTimerOn, setIsTimerOn] = useLocalStorage<boolean>(
     "isTimerOn",
-    false,
+    false
   );
   const [currTime, setCurrTime] = useLocalStorage<Time>("currTime", {
     min: OPTIONS[OPTIONS.findIndex((option) => option.name === currAction)]
@@ -76,19 +76,67 @@ const PomodoroTimer: FC<PomodoroTimerProps> = ({
     sec: 0,
   });
 
-  // Update badge whenever timer state or time changes (including on mount)
+  // Tracks whether we've finished syncing from background on mount.
+  // When true, we can safely push to the badge (avoids overwriting background with stale localStorage).
+  const [isSyncComplete, setSyncComplete] = useState(false);
+
+  // On mount: if timer was running while popup was closed, sync from background (source of truth).
+  // This prevents overwriting the badge with stale localStorage when we first open the popup.
   useEffect(() => {
+    if (!isTimerOn) {
+      setSyncComplete(true);
+      return;
+    }
+    if (typeof chrome === "undefined" || !chrome.runtime?.sendMessage) {
+      setSyncComplete(true);
+      return;
+    }
+    chrome.runtime
+      .sendMessage({ type: "SYNC_STATE" })
+      .then(
+        (
+          state:
+            | {
+                min?: number;
+                sec?: number;
+                isRunning?: boolean;
+                actionIndex?: number;
+              }
+            | undefined
+        ) => {
+          if (!state) return;
+          if (state.isRunning === false) {
+            setIsTimerOn(false);
+            const idx = state.actionIndex ?? 0;
+            setCurrTime({ min: OPTIONS[idx].duration, sec: 0 });
+          } else if (state.min !== undefined && state.sec !== undefined) {
+            setCurrTime({ min: state.min, sec: state.sec });
+            if (state.actionIndex !== undefined && OPTIONS[state.actionIndex]) {
+              setCurrAction(OPTIONS[state.actionIndex].name);
+            }
+          }
+        }
+      )
+      .catch(() => {})
+      .finally(() => setSyncComplete(true));
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- run only on mount; isTimerOn is read from first render
+  }, []);
+
+  // Update badge whenever timer state or time changes. Skip pushing until sync completes
+  // so we don't overwrite the background's correct countdown with stale localStorage on popup open.
+  useEffect(() => {
+    if (isTimerOn && !isSyncComplete) return;
     if (isTimerOn) {
       updateBadge(
         currTime.min,
         currTime.sec,
         true,
-        OPTIONS.findIndex((option) => option.name === currAction),
+        OPTIONS.findIndex((option) => option.name === currAction)
       );
     } else {
       clearBadge();
     }
-  }, [isTimerOn, currTime.min, currTime.sec, currAction]);
+  }, [isTimerOn, isSyncComplete, currTime.min, currTime.sec, currAction]);
 
   useEffect(() => {
     let id: NodeJS.Timer | number | undefined;
@@ -123,7 +171,7 @@ const PomodoroTimer: FC<PomodoroTimerProps> = ({
       currTime.min,
       currTime.sec,
       true,
-      OPTIONS.findIndex((option) => option.name === currAction),
+      OPTIONS.findIndex((option) => option.name === currAction)
     );
   };
   const stopTimer = (): void => {
@@ -133,7 +181,7 @@ const PomodoroTimer: FC<PomodoroTimerProps> = ({
 
   const changeAction = (
     event: React.MouseEvent<HTMLElement>,
-    newVal: string | null,
+    newVal: string | null
   ) => {
     setCurrAction(newVal as string);
     const newTime = {
@@ -148,7 +196,7 @@ const PomodoroTimer: FC<PomodoroTimerProps> = ({
         newTime.min,
         newTime.sec,
         true,
-        OPTIONS.findIndex((option) => option.name === newVal),
+        OPTIONS.findIndex((option) => option.name === newVal)
       );
     }
   };
@@ -167,7 +215,10 @@ const PomodoroTimer: FC<PomodoroTimerProps> = ({
           <KeyboardBackspaceOutlinedIcon
             fontSize="small"
             className="customIcon"
-            onClick={handleBack}
+            onClick={() => {
+              handleBack();
+              clearBadge();
+            }}
           />
 
           <h2>Focus Session</h2>
@@ -177,6 +228,7 @@ const PomodoroTimer: FC<PomodoroTimerProps> = ({
             className="customIcon"
             onClick={(): void => {
               id !== undefined && handleDelete(id);
+              clearBadge();
             }}
           />
         </nav>
