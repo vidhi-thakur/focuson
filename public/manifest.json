@@ -1,5 +1,5 @@
 {
-  "manifest_version": 3,
+  "manifest_version": 4,
   "name": "Focus On",
   "version": "1.0",
   "description": "Focus. Finish. Repeat.\nA clean to-do list with a Pomodoro-powered focus mode. Stay on track, one task at a time.",
