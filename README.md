@@ -28,7 +28,7 @@
 
 1. **Clone the repo:**
 ```
-git clone https://github.com/yourusername/focus-on-extension.git
+git clone https://github.com/vidhi-thakur/focuson.git
 cd focus-on-extension
 ```
 
